@@ -10,7 +10,7 @@
     <span class="fill-remaining-space"></span>
 
     <!-- foot -->
-    <span>
+    <span hidden="true">
         <a mat-button href="https://www.youtube.com" target="_blank">
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-youtube"></mat-icon>
         </a>
@@ -23,8 +23,9 @@
     </span>
 
     <span>
-        <button mat-button>
+        <button mat-button (click)="openLogin()">
             <mat-icon>login</mat-icon>
+            Login
         </button>
     </span>
 </mat-toolbar>
