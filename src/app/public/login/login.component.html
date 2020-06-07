@@ -6,15 +6,15 @@
         <!-- user -->
         <mat-form-field class="full-width" appearance="outline">
             <mat-label>Username or email address</mat-label>
-            <input matInput name="username" type="text" [formControl]="username" [(ngModel)]="user" required>
+            <input matInput name="username" type="text" [formControl]="username" required>
             <mat-error *ngIf="username.invalid">{{getUserErrorMessage()}}</mat-error>
         </mat-form-field>
 
         <!-- password -->
         <mat-form-field class="full-width" appearance="outline">
             <mat-label>Password</mat-label>
-            <input matInput name="password" [type]="hide ? 'password' : 'text'" [formControl]="password"
-                [(ngModel)]="passwd" minlength="6" required>
+            <input matInput name="password" [type]="hide ? 'password' : 'text'" [formControl]="password" minlength="6"
+                required>
             <button mat-flat-button matSuffix (click)="hide = !hide">
                 <mat-icon color="primary">{{hide? 'visibility_off': 'visibility'}}</mat-icon>
             </button>

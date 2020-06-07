@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/schematics": "^9.1.7",
     "@angular/animations": "~9.1.6",
     "@angular/cdk": "^9.2.4",
     "@angular/common": "~9.1.6",
@@ -24,6 +25,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "rxjs": "~6.5.4",
+    "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
