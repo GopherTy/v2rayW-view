@@ -23,9 +23,9 @@ export class LoginComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
 
   constructor(
-    private httpClient: HttpClient,
     private session: SessionService,
     private toasterService: ToasterService,
+    // private dailog:Dailog
   ) { }
 
   ngOnInit(): void {
@@ -65,6 +65,7 @@ export class LoginComponent implements OnInit {
 
   // 登录
   login() {
+
     // 禁用按钮
     this.disabled = true
 
@@ -96,25 +97,8 @@ export class LoginComponent implements OnInit {
     ).catch((error) => {
       console.log(error)
       this.toasterService.pop("error", "登录失败", "用户名或密码错误")
+    }).finally(() => {
+      this.disabled = false
     })
-      .finally(() => {
-        this.disabled = false
-      })
-
-    // request
-    // this.httpClient.post('user/login', {
-    //   "user": user,
-    //   "password": md5Pwd,
-    // }, {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/json',
-    //     'Access-Control-Allow-Origin': '*'
-    //   }),
-    // }
-    // ).toPromise().then((v) => {
-    //   console.log(v)
-    // }).catch((e) => {
-    //   console.log(e)
-    // })
   }
 }
