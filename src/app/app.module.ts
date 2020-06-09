@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { PublicModule } from './public/public.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { ToasterModule } from 'angular2-toaster';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule,
     PublicModule,
+    ToasterModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { isNullOrUndefined } from 'util';
 import { Md5 } from "ts-md5/dist/md5";
+
+import { ToasterService } from 'angular2-toaster';
+import { SessionService } from 'src/app/service/session/session.service';
 
 @Component({
   selector: 'app-login',
@@ -11,17 +14,23 @@ import { Md5 } from "ts-md5/dist/md5";
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  // properties
+  // 属性
   hide: boolean
+  disabled: boolean
 
   username = new FormControl('', [Validators.required])
   password = new FormControl('', [Validators.required])
   email = new FormControl('', [Validators.required, Validators.email]);
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+    private session: SessionService,
+    private toasterService: ToasterService,
+  ) { }
 
   ngOnInit(): void {
     this.hide = true
+    this.disabled = false
   }
 
   // validator functions
@@ -54,8 +63,11 @@ export class LoginComponent implements OnInit {
     return str.replace(reg, '')
   }
 
-  // login
+  // 登录
   login() {
+    // 禁用按钮
+    this.disabled = true
+
     // illegal request
     if (isNullOrUndefined(this.username.value) || isNullOrUndefined(this.password.value)) {
       console.log("illegal request")
@@ -72,22 +84,37 @@ export class LoginComponent implements OnInit {
       return
     }
 
-    const md5Pwd = Md5.hashStr(pwd)
+    let md5Pwd = Md5.hashStr(pwd)
+    md5Pwd = md5Pwd as string
+
+    // 发送请求
+    this.session.login(user, md5Pwd).then(
+      (res) => {
+        console.log(res)
+        this.toasterService.pop("success", "登录成功", "欢迎你使用 V2rayWeb")
+      }
+    ).catch((error) => {
+      console.log(error)
+      this.toasterService.pop("error", "登录失败", "用户名或密码错误")
+    })
+      .finally(() => {
+        this.disabled = false
+      })
 
     // request
-    this.httpClient.post('user/login', {
-      "user": user,
-      "password": md5Pwd,
-    }, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }),
-    }
-    ).toPromise().then((v) => {
-      console.log(v)
-    }).catch((e) => {
-      console.log(e)
-    })
+    // this.httpClient.post('user/login', {
+    //   "user": user,
+    //   "password": md5Pwd,
+    // }, {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json',
+    //     'Access-Control-Allow-Origin': '*'
+    //   }),
+    // }
+    // ).toPromise().then((v) => {
+    //   console.log(v)
+    // }).catch((e) => {
+    //   console.log(e)
+    // })
   }
 }
