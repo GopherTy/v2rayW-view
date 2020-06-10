@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../login/login.component';
+import { JoinComponent } from '../join/join.component';
 
 
 @Component({
@@ -22,10 +23,11 @@ export class ToolbarComponent implements OnInit {
 
   // open LoginComponent
   openLogin() {
-    const dialogRef = this.dialog.open(LoginComponent)
+    this.dialog.open(LoginComponent)
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    })
+  // open JoinComponent
+  openJoin() {
+    this.dialog.open(JoinComponent)
   }
 }

@@ -11,22 +11,23 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BackEndData } from '../data';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  selector: 'app-join',
+  templateUrl: './join.component.html',
+  styleUrls: ['./join.component.css']
 })
-export class LoginComponent implements OnInit {
+export class JoinComponent implements OnInit {
   // 属性
   hide: boolean
   disabled: boolean
 
-  username = new FormControl({ value: '', disabled: false }, [Validators.required])
-  password = new FormControl({ value: '', disabled: false }, [Validators.required])
+  username = new FormControl('', [Validators.required])
+  password = new FormControl('', [Validators.required])
+  email = new FormControl('', [Validators.required, Validators.email]);
 
   constructor(
     private session: SessionService,
     private toasterService: ToasterService,
-    private dialogRef: MatDialogRef<LoginComponent>
+    private dialogRef: MatDialogRef<JoinComponent>
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +50,14 @@ export class LoginComponent implements OnInit {
 
     return '密码长度至少为6位'
   }
+  // email
+  getEmailErrorMessage() {
+    if (this.email.hasError('required')) {
+      return '邮箱不能为空';
+    }
+
+    return this.email.hasError('email') ? '邮箱地址格式不正确' : '';
+  }
 
   // trim all space in string
   trim(str: string) {
@@ -57,8 +66,8 @@ export class LoginComponent implements OnInit {
   }
 
   // 登录
-  login() {
-    if (this.username.invalid || this.password.invalid) {
+  join() {
+    if (this.username.invalid || this.password.invalid || this.email.invalid) {
       console.log("parameter invalid")
       return
     }
@@ -68,33 +77,37 @@ export class LoginComponent implements OnInit {
     user = this.trim(user)
     let pwd = this.password.value as string
     pwd = this.trim(pwd)
-    if (user == '' || pwd == '') {
-      console.log('name or password null')
+    let email = this.email.value as string
+    email = this.trim(email)
+    if (user === '' || pwd === '' || email === '') {
+      console.log('name or password or email null')
       return
     }
 
     // 禁用按钮
     this.username.disable()
     this.password.disable()
+    this.email.disable()
     this.disabled = true
 
     let md5Pwd = Md5.hashStr(pwd)
     md5Pwd = md5Pwd as string
 
     // 发送请求
-    this.session.login(user, md5Pwd).then(
-      (res: BackEndData) => {
-        console.log(res)
-        this.toasterService.pop("success", "登录成功", "欢迎你使用 V2rayWeb")
+    this.session.join<BackEndData>(user, md5Pwd, email).then(
+      (res) => {
+        console.log(res.data.msg)
+        this.toasterService.pop("success", "注册成功", "请登录系统")
         this.dialogRef.close()
       }
     ).catch((error: HttpErrorResponse) => {
       const res = error.error as BackEndData
       console.log(res)
-      this.toasterService.pop("error", "登录失败", res.desc)
+      this.toasterService.pop("error", "注册失败", "系统错误，请重新注册")
     }).finally(() => {
       this.username.enable()
       this.password.enable()
+      this.email.enable()
       this.disabled = false
     })
   }

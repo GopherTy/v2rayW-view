@@ -9,10 +9,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { LoginComponent } from './login/login.component';
+import { JoinComponent } from './join/join.component';
 
 
 
@@ -20,6 +21,7 @@ import { LoginComponent } from './login/login.component';
   declarations: [
     ToolbarComponent,
     LoginComponent,
+    JoinComponent,
   ],
   imports: [
     FormsModule,
@@ -33,6 +35,7 @@ import { LoginComponent } from './login/login.component';
     MatInputModule,
     MatFormFieldModule,
     MatSlideToggleModule,
+    MatTooltipModule,
   ],
   exports: [
     ToolbarComponent,

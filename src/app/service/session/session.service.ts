@@ -18,9 +18,9 @@ export class SessionService {
   }
 
   // 注册
-  join<T>(user: string, password: string, email: string) {
+  join<T>(username: string, password: string, email: string) {
     return this.httpClient.post<T>(join, {
-      "user": user,
+      "username": username,
       "password": password,
       "email": email,
     }).toPromise()

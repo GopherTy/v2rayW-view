@@ -1,13 +1,20 @@
-<h2 mat-dialog-title>登录</h2>
+<h2 mat-dialog-title>注册</h2>
 
 <!-- Json  data commit -->
 <mat-dialog-content>
     <form>
         <!-- user -->
         <mat-form-field class="full-width" appearance="outline">
-            <mat-label>用户名或邮箱地址</mat-label>
+            <mat-label>用户名</mat-label>
             <input matInput name="username" type="text" [formControl]="username" required>
             <mat-error *ngIf="username.invalid">{{getUserErrorMessage()}}</mat-error>
+        </mat-form-field>
+
+        <!-- email -->
+        <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput name="email" type="email" [formControl]="email" required>
+            <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
         </mat-form-field>
 
         <!-- password -->
@@ -24,10 +31,8 @@
     </form>
 </mat-dialog-content>
 
-<mat-slide-toggle [disabled]="disabled" name="keep" color="primary">记住登录状态</mat-slide-toggle>
-
 <mat-dialog-actions>
-    <button [disabled]="disabled" mat-raised-button color="primary" (click)="login()">提交</button>
+    <button [disabled]="disabled" mat-raised-button color="primary" (click)="join()">提交</button>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
     <button [disabled]="disabled" mat-raised-button mat-dialog-close color="primary">关闭</button>
 </mat-dialog-actions>
