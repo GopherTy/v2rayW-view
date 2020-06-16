@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { LoginComponent } from './login/login.component';
 import { JoinComponent } from './join/join.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -27,6 +28,7 @@ import { JoinComponent } from './join/join.component';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    RouterModule,
 
     MatIconModule,
     MatButtonModule,

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
-import { isNullOrUndefined } from 'util';
 import { Md5 } from "ts-md5/dist/md5";
 
 import { ToasterService } from 'angular2-toaster';
@@ -9,6 +8,7 @@ import { SessionService } from 'src/app/service/session/session.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BackEndData } from '../data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private session: SessionService,
     private toasterService: ToasterService,
-    private dialogRef: MatDialogRef<LoginComponent>
+    private dialogRef: MatDialogRef<LoginComponent>,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -87,8 +88,10 @@ export class LoginComponent implements OnInit {
         console.log(res)
         this.toasterService.pop("success", "登录成功", "欢迎你使用 V2rayWeb")
         this.dialogRef.close()
+        this.router.navigateByUrl("v2ray")
       }
     ).catch((error: HttpErrorResponse) => {
+      console.log(error)
       const res = error.error as BackEndData
       console.log(res)
       this.toasterService.pop("error", "登录失败", res.desc)
