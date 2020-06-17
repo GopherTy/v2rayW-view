@@ -10,51 +10,85 @@
             </mat-card-header>
 
             <mat-card-content>
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>名称</mat-label>
-                    <input matInput>
-                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>地址</mat-label>
-                    <input matInput>
-                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>端口</mat-label>
-                    <input matInput>
-                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>用户ID</mat-label>
-                    <input matInput>
-                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>用户ID</mat-label>
-                    <input matInput>
-                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="example-full-width">
-                    <mat-label>额外ID</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-label>别名</mat-label>
                     <input matInput>
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>协议</mat-label>
+                    <mat-label>地址</mat-label>
+                    <input matInput>
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>端口</mat-label>
+                    <input matInput>
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>用户ID</mat-label>
+                    <input matInput>
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>额外ID</mat-label>
+                    <input matInput>
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+
+                <p></p>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>加密方式</mat-label>
                     <mat-select>
                         <mat-option value="auto">auto</mat-option>
                         <mat-option value="none">none</mat-option>
                         <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
+                        <mat-option value="chacha20-poly1305">chacha20-poly1305</mat-option>
                     </mat-select>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                    <mat-label>传输协议</mat-label>
+                    <mat-select>
+                        <mat-option value="tcp">tcp</mat-option>
+                        <mat-option value="kcp">kcp</mat-option>
+                        <mat-option value="ws">ws</mat-option>
+                        <mat-option value="h2">h2</mat-option>
+                        <mat-option value="quic">quic</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>伪装类型</mat-label>
+                    <mat-select>
+                        <mat-option value="none">none</mat-option>
+                        <mat-option value="http">http</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>伪装域名</mat-label>
+                    <textarea matInput></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>路径</mat-label>
+                    <input matInput>
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+                <p>
+                    <mat-form-field appearance="outline">
+                        <mat-label>底层传输安全</mat-label>
+                        <mat-select>
+                            <mat-option value=""></mat-option>
+                            <mat-option value="tls">tls</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </p>
             </mat-card-content>
 
             <mat-card-actions>
