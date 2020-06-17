@@ -1,0 +1,16 @@
+.mat-tab-group{
+    margin-top: 15px;
+}
+
+.icon{
+    font-size: 1.5em;
+}
+
+.mat-card{
+    margin: 10px;
+    width: 60%;
+}
+
+.full-width {
+    width: 50%;
+}

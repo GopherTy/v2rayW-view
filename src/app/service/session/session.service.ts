@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { login, join, logout } from './api';
+import { Login, Join, Logout } from './api';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class SessionService {
 
   // 登录 
   login<T>(user: string, password: string) {
-    return this.httpClient.post<T>(login, {
+    return this.httpClient.post<T>(Login, {
       "user": user,
       "password": password,
     }).pipe(tap<any>(res => {
@@ -27,12 +27,12 @@ export class SessionService {
 
   // 登出
   logout<T>() {
-    return this.httpClient.get<T>(logout).toPromise()
+    return this.httpClient.get<T>(Logout).toPromise()
   }
 
   // 注册
   join<T>(username: string, password: string, email: string) {
-    return this.httpClient.post<T>(join, {
+    return this.httpClient.post<T>(Join, {
       "username": username,
       "password": password,
       "email": email,

@@ -13,6 +13,13 @@ import { httpInterceptorProviders } from './interceptor/barrel';
 import { V2rayComponent } from './v2ray/v2ray.component';
 import { HomeComponent } from './home/home.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 
 
@@ -29,6 +36,12 @@ import { MatCardModule } from '@angular/material/card';
     HttpClientModule,
     PublicModule,
     MatCardModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {
