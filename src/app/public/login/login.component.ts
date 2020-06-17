@@ -9,6 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BackEndData } from '../data';
 import { Router } from '@angular/router';
+import { MsgService } from 'src/app/service/msg/msg.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
   password = new FormControl({ value: '', disabled: false }, [Validators.required])
 
   constructor(
+    private msg: MsgService,
     private session: SessionService,
     private toasterService: ToasterService,
     private dialogRef: MatDialogRef<LoginComponent>,
@@ -85,8 +87,8 @@ export class LoginComponent implements OnInit {
     // 发送请求
     this.session.login(user, md5Pwd).then(
       (res: BackEndData) => {
-        console.log(res)
-        this.toasterService.pop("success", "登录成功", "欢迎你使用 V2rayWeb")
+        this.msg.changemessage(1)
+        this.toasterService.pop("success", res.data.msg, "欢迎你使用 V2rayWeb")
         this.dialogRef.close()
         this.router.navigateByUrl("v2ray")
       }

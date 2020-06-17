@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
+<mat-toolbar color="primary" class="mat-elevation-z8" #toolbar>
     <!-- home -->
     <span>
         <button routerLink='/' mat-button matTooltip="主页">
@@ -6,31 +6,38 @@
         </button>
     </span>
 
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-remaining-space"></span>
+
     <span>
         <a mat-button href="https://www.github.com/gopherty" target="_blank" matTooltip="Github">
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-github"></mat-icon>
         </a>
     </span>
 
-    <!-- This fills the remaining space of the current row -->
-    <span class="fill-remaining-space"></span>
-
     <!-- foot -->
-    <span hidden="true">
-        <a mat-button href="https://www.youtube.com" target="_blank">
+    <span [hidden]="hiddenIcon">
+        <a mat-button href="https://www.youtube.com" target="_blank" matTooltip="Youtube">
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-youtube"></mat-icon>
         </a>
     </span>
 
 
-    <span>
+    <span [hidden]="hiddenIcon">
+        <button mat-button (click)="loggout()">
+            <mat-icon>directions_run</mat-icon>
+            登出
+        </button>
+    </span>
+
+    <span [hidden]="!hiddenIcon">
         <button mat-button (click)="openJoin()">
             <mat-icon>person_add</mat-icon>
             注册
         </button>
     </span>
 
-    <span>
+    <span [hidden]="!hiddenIcon">
         <button mat-button (click)="openLogin()">
             <mat-icon>login</mat-icon>
             登录

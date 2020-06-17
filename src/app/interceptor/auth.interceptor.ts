@@ -16,8 +16,6 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const access = this.helper.tokenGetter()
     if (access) {
-      const data = this.helper.getTokenExpirationDate()
-      console.log(data)
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${access}`
