@@ -1,9 +1,28 @@
 <mat-tab-group>
     <mat-tab>
+        <!-- 头部 -->
         <ng-template mat-tab-label>
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-free-code-camp"></mat-icon>
             V2ray
         </ng-template>
+        <!-- 状态 -->
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        当前状态
+                        <mat-icon [style]="enabled?'color:limegreen;': 'color: grey'">wb_incandescent
+                        </mat-icon>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <mat-form-field class="log">
+                    <mat-label>日志</mat-label>
+                    <textarea matInput></textarea>
+                </mat-form-field>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <!-- 配置 -->
         <mat-card>
             <mat-card-header>
                 <mat-card-title>V2ray配置</mat-card-title>
@@ -18,33 +37,40 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>地址</mat-label>
-                    <input matInput>
+                    <input matInput type="text" [(ngModel)]="params.Address">
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>端口</mat-label>
-                    <input matInput>
+                    <input matInput type="number" [(ngModel)]="params.Port">
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>用户ID</mat-label>
-                    <input matInput>
+                    <input matInput type="text" [(ngModel)]="params.UserID">
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>额外ID</mat-label>
-                    <input matInput>
+                    <input matInput type="number" [(ngModel)]="params.AlertID">
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                    <mat-label>用户等级</mat-label>
+                    <input matInput type="number" [(ngModel)]="params.Level">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+
+                <!-- 换行 -->
                 <p></p>
 
                 <mat-form-field appearance="outline">
                     <mat-label>加密方式</mat-label>
-                    <mat-select>
+                    <mat-select (selectionChange)="security($event)">
                         <mat-option value="auto">auto</mat-option>
                         <mat-option value="none">none</mat-option>
                         <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
@@ -54,7 +80,7 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>传输协议</mat-label>
-                    <mat-select>
+                    <mat-select (selectionChange)="network($event)">
                         <mat-option value="tcp">tcp</mat-option>
                         <mat-option value="kcp">kcp</mat-option>
                         <mat-option value="ws">ws</mat-option>
@@ -62,38 +88,30 @@
                         <mat-option value="quic">quic</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>伪装类型</mat-label>
-                    <mat-select>
-                        <mat-option value="none">none</mat-option>
-                        <mat-option value="http">http</mat-option>
-                    </mat-select>
-                </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>伪装域名</mat-label>
-                    <textarea matInput></textarea>
+                    <textarea matInput [(ngModel)]="params.Domains"></textarea>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>路径</mat-label>
-                    <input matInput>
+                    <input matInput type="text" [(ngModel)]="params.Path">
                     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 </mat-form-field>
-                <p>
-                    <mat-form-field appearance="outline">
-                        <mat-label>底层传输安全</mat-label>
-                        <mat-select>
-                            <mat-option value=""></mat-option>
-                            <mat-option value="tls">tls</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </p>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>底层传输安全</mat-label>
+                    <mat-select (selectionChange)="netSecurity($event)">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="tls">tls</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </mat-card-content>
 
             <mat-card-actions>
-                <button mat-raised-button color="primary" (click)="start()">启动</button>
-                <button mat-raised-button color="primary" (click)="stop()">停止</button>
+                <button [disabled]="enabled" mat-raised-button color="primary" (click)="start()">启动</button>
+                <button [disabled]="!enabled" mat-raised-button color="primary" (click)="stop()">停止</button>
             </mat-card-actions>
         </mat-card>
     </mat-tab>
