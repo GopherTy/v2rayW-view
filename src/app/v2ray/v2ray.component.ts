@@ -37,9 +37,9 @@ export class V2rayComponent implements OnInit {
   network(evt) {
     this.params.NetWork = evt.value
   }
+  // 传输协议加密方式
   netSecurity(evt) {
     this.params.NetSecurity = evt.value
-    console.log(this.params)
   }
 
   // 启动
