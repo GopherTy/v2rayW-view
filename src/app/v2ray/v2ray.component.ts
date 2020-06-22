@@ -51,12 +51,11 @@ export class V2rayComponent implements OnInit {
     this.disable = true
 
     this.v2ray.start<BackEndData>(this.params).then((res) => {
-      console.log(res)
       this.toaster.pop("success", "启动成功", res.data.msg)
       this.enabled = true
     }).catch((err: HttpErrorResponse) => {
-      console.log(err.error.error)
-      this.toaster.pop("error", "启动失败", err.error.error)
+      console.log(err)
+      this.toaster.pop("error", "启动失败", err.message)
     }).finally(() => {
       this.disable = false
     })

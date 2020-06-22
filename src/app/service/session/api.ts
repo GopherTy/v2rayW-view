@@ -2,3 +2,4 @@
 export const Join = '/user/join'
 export const Login = '/user/login'
 export const Logout = '/user/logout'
+export const RefreshToken = '/token/refresh'

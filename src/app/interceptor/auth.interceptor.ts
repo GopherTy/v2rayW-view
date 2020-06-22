@@ -11,7 +11,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private helper: JwtHelperService) { }
+  constructor(
+    private helper: JwtHelperService
+  ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const access = this.helper.tokenGetter()

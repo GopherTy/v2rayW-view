@@ -60,6 +60,7 @@ export class ToolbarComponent implements OnInit {
       this.msg.changemessage(2)
       this.toast.pop("success", "登出成功", "你已经退出本系统")
       localStorage.removeItem("access_token")
+      localStorage.removeItem("refresh_token")
       this.router.navigateByUrl("")
     }).catch((e) => {
       this.toast.pop("error", "登出失败", e)
