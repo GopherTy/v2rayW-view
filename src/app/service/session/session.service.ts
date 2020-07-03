@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Login, Join, Logout } from './api';
+import { Login, Join, Logout, RefreshToken } from './api';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class SessionService {
 
   // 如果 token 过期，刷新 token。
   refreshToken<T>(refreshToken: string) {
-    return this.httpClient.post<T>(refreshToken, {
+    return this.httpClient.post<T>(RefreshToken, {
       "refresh_token": refreshToken,
     })
   }

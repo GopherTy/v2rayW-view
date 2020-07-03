@@ -4,6 +4,7 @@ import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from './param';
+import { MsgService } from '../service/msg/msg.service';
 
 @Component({
   selector: 'app-v2ray',
@@ -21,12 +22,14 @@ export class V2rayComponent implements OnInit {
   constructor(
     private v2ray: V2rayService,
     private toaster: ToasterService,
+    private msg: MsgService,
   ) { }
 
   ngOnInit(): void {
     this.disable = false
     this.enabled = false
     this.params = {}
+
   }
 
   // 加密方式
@@ -55,6 +58,10 @@ export class V2rayComponent implements OnInit {
       this.enabled = true
     }).catch((err: HttpErrorResponse) => {
       console.log(err)
+      if (err.status === 401) {
+        this.msg.changemessage(2)
+        localStorage.clear()
+      }
       this.toaster.pop("error", "启动失败", err.message)
     }).finally(() => {
       this.disable = false
@@ -74,6 +81,10 @@ export class V2rayComponent implements OnInit {
       this.enabled = false
       this.toaster.pop("success", "关闭成功", res.data.msg)
     }).catch((e) => {
+      if (e.status === 401) {
+        this.msg.changemessage(2)
+        localStorage.clear()
+      }
       console.log(e)
       this.toaster.pop("error", "关闭失败", e)
     }).finally(() => {
