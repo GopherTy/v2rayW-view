@@ -15,6 +15,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { LoginComponent } from './login/login.component';
 import { JoinComponent } from './join/join.component';
 import { RouterModule } from '@angular/router';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 
@@ -23,6 +24,7 @@ import { RouterModule } from '@angular/router';
     ToolbarComponent,
     LoginComponent,
     JoinComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     FormsModule,
