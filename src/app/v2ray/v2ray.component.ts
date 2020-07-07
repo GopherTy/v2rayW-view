@@ -5,6 +5,7 @@ import { BackEndData } from '../public/data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from './param';
 import { MsgService } from '../service/msg/msg.service';
+import { isNull } from 'util';
 
 @Component({
   selector: 'app-v2ray',
@@ -30,6 +31,10 @@ export class V2rayComponent implements OnInit {
     this.enabled = false
     this.params = {}
 
+    const ws = new WebSocket("ws://localhost:9200/api/v2ray/logs", [localStorage.getItem("access_token")])
+    ws.onmessage = (e) => {
+      console.log("data", e.data)
+    }
   }
 
   // 加密方式
@@ -51,8 +56,12 @@ export class V2rayComponent implements OnInit {
       this.disable = true
       return
     }
+    if (Object.keys(this.params).length === 0) {
+      return
+    }
     this.disable = true
 
+    // 启动
     this.v2ray.start<BackEndData>(this.params).then((res) => {
       this.toaster.pop("success", "启动成功", res.data.msg)
       this.enabled = true
