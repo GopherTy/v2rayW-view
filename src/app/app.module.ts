@@ -22,6 +22,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 
 @NgModule({
@@ -46,6 +48,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatGridListModule,
     MatExpansionModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {

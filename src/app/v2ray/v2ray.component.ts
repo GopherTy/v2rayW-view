@@ -18,7 +18,7 @@ export class V2rayComponent implements OnInit {
   enabled: boolean
   // 启动配置参数
   params: Params
-
+  logs: string
 
   constructor(
     private v2ray: V2rayService,
@@ -30,10 +30,12 @@ export class V2rayComponent implements OnInit {
     this.disable = false
     this.enabled = false
     this.params = {}
+    this.logs = ''
 
+    // 登录成功后开启 ws 协议，用于开启日志
     const ws = new WebSocket("ws://localhost:9200/api/v2ray/logs", [localStorage.getItem("access_token")])
-    ws.onmessage = (e) => {
-      console.log("data", e.data)
+    ws.onmessage = (v) => {
+      this.logs += v.data
     }
   }
 

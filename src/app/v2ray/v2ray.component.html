@@ -17,8 +17,8 @@
                 </mat-expansion-panel-header>
 
                 <mat-form-field class="log">
-                    <mat-label>日志</mat-label>
-                    <textarea matInput></textarea>
+                    <mat-checkbox color="primary">日志</mat-checkbox>
+                    <textarea matInput [(ngModel)]="logs"></textarea>
                 </mat-form-field>
             </mat-expansion-panel>
         </mat-accordion>
