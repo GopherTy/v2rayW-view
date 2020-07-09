@@ -17,8 +17,9 @@
                 </mat-expansion-panel-header>
 
                 <mat-form-field class="log">
-                    <mat-checkbox color="primary">日志</mat-checkbox>
-                    <textarea matInput [(ngModel)]="logs"></textarea>
+                    <mat-checkbox color="primary" [(ngModel)]="checked" (change)="startLogs($event.checked)">开启日志
+                    </mat-checkbox>
+                    <textarea matInput [(ngModel)]="logs" [readonly]="true"></textarea>
                 </mat-form-field>
             </mat-expansion-panel>
         </mat-accordion>

@@ -8,6 +8,7 @@ import { SessionService } from 'src/app/service/session/session.service';
 import { BackEndData } from '../data';
 import { ToasterService } from 'angular2-toaster';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -59,11 +60,16 @@ export class ToolbarComponent implements OnInit {
     this.session.logout<BackEndData>().then((v) => {
       this.msg.changemessage(2)
       this.toast.pop("success", "登出成功", "你已经退出本系统")
-      localStorage.removeItem("access_token")
-      localStorage.removeItem("refresh_token")
+      localStorage.clear()
       this.router.navigateByUrl("")
-    }).catch((e) => {
-      this.toast.pop("error", "登出失败", e)
+    }).catch((e: HttpErrorResponse) => {
+      console.log("Loggout Error", e)
+      // 不是刷新 token 的错误，弹出错误内容。
+      if (e.status == 403) {
+        this.toast.pop("warning", "长时间未操作请重新登录")
+      } else {
+        this.toast.pop("error", "登出失败", e.error.error)
+      }
     })
   }
 }

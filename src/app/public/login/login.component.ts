@@ -95,7 +95,6 @@ export class LoginComponent implements OnInit {
     ).catch((error: HttpErrorResponse) => {
       console.log(error)
       const res = error.error as BackEndData
-      console.log(res)
       this.toasterService.pop("error", "登录失败", res.desc)
     }).finally(() => {
       this.username.enable()

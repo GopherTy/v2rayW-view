@@ -5,7 +5,7 @@ import { BackEndData } from '../public/data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from './param';
 import { MsgService } from '../service/msg/msg.service';
-import { isNull } from 'util';
+// import { isNull } from 'util';
 
 @Component({
   selector: 'app-v2ray',
@@ -19,6 +19,8 @@ export class V2rayComponent implements OnInit {
   // 启动配置参数
   params: Params
   logs: string
+  checked = true
+  on = true
 
   constructor(
     private v2ray: V2rayService,
@@ -35,7 +37,9 @@ export class V2rayComponent implements OnInit {
     // 登录成功后开启 ws 协议，用于开启日志
     const ws = new WebSocket("ws://localhost:9200/api/v2ray/logs", [localStorage.getItem("access_token")])
     ws.onmessage = (v) => {
-      this.logs += v.data
+      if (this.on) {
+        this.logs += v.data
+      }
     }
   }
 
@@ -67,13 +71,15 @@ export class V2rayComponent implements OnInit {
     this.v2ray.start<BackEndData>(this.params).then((res) => {
       this.toaster.pop("success", "启动成功", res.data.msg)
       this.enabled = true
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err)
-      if (err.status === 401) {
-        this.msg.changemessage(2)
-        localStorage.clear()
+      this.logs = ''
+    }).catch((e: HttpErrorResponse) => {
+      console.log("V2ray Start Error", e)
+      // 不是刷新 token 的错误，弹出错误内容。
+      if (e.status == 403) {
+        this.toaster.pop("warning", "长时间未操作请重新登录")
+      } else {
+        this.toaster.pop("error", "关闭失败", e.error.error)
       }
-      this.toaster.pop("error", "启动失败", err.message)
     }).finally(() => {
       this.disable = false
     })
@@ -88,18 +94,23 @@ export class V2rayComponent implements OnInit {
     this.disable = true
 
     this.v2ray.stop<BackEndData>().then((res) => {
-      console.log(res)
       this.enabled = false
       this.toaster.pop("success", "关闭成功", res.data.msg)
-    }).catch((e) => {
-      if (e.status === 401) {
-        this.msg.changemessage(2)
-        localStorage.clear()
+    }).catch((e: HttpErrorResponse) => {
+      console.log("V2ray Stop Error", e)
+      // 不是刷新 token 的错误，弹出错误内容。
+      if (e.status == 403) {
+        this.toaster.pop("warning", "长时间未操作请重新登录")
+      } else {
+        this.toaster.pop("error", "关闭失败", e.error.error)
       }
-      console.log(e)
-      this.toaster.pop("error", "关闭失败", e)
     }).finally(() => {
       this.disable = false
     })
+  }
+
+  // 开启日志
+  startLogs(started: boolean) {
+    this.on = started
   }
 }
