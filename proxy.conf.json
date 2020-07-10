@@ -1,6 +1,7 @@
 {
-    "/": {
-        "target": "http://localhost:9200/api",
-        "secure": false
+    "/api": {
+        "target": "http://localhost:9200",
+        "secure": false,
+        "ws": true
     }
 }

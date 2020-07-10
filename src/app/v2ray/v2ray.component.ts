@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { V2rayService } from '../service/v2ray/v2ray.service';
 import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Params } from './param';
 import { MsgService } from '../service/msg/msg.service';
+import { SessionService } from '../service/session/session.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Stop } from '../service/v2ray/api';
 // import { isNull } from 'util';
 
 @Component({
@@ -25,6 +28,8 @@ export class V2rayComponent implements OnInit {
   constructor(
     private v2ray: V2rayService,
     private toaster: ToasterService,
+    private session: SessionService,
+    private helper: JwtHelperService,
     private msg: MsgService,
   ) { }
 
@@ -35,10 +40,28 @@ export class V2rayComponent implements OnInit {
     this.logs = ''
 
     // 登录成功后开启 ws 协议，用于开启日志
-    const ws = new WebSocket("ws://localhost:9200/api/v2ray/logs", [localStorage.getItem("access_token")])
+    let ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
     ws.onmessage = (v) => {
       if (this.on) {
         this.logs += v.data
+      }
+    }
+    ws.onerror = (v) => {
+      console.log(v)
+    }
+    ws.onclose = (v) => {
+      // 刷新 token 
+      if (v.code === 5001) {
+        const refresh = localStorage.getItem("refresh_token")
+        if (refresh === '' || this.helper.isTokenExpired(refresh)) {
+          return
+        }
+
+        this.session.refreshToken<any>(refresh).subscribe((v) => {
+          localStorage.setItem("access_token", v.token.access_token)
+          this.msg.changemessage(1)
+          ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
+        })
       }
     }
   }

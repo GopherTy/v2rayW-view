@@ -22,6 +22,12 @@
         </a>
     </span>
 
+    <span [hidden]="hiddenIcon">
+        <a mat-button routerLink='/v2ray' mat-button matTooltip="v2ray配置">
+            <mat-icon class="v2ray" fontSet="fontawesome-fa" fontIcon="fa-paper-plane"></mat-icon>
+        </a>
+    </span>
+
 
     <span [hidden]="hiddenIcon">
         <button mat-button (click)="loggout()">

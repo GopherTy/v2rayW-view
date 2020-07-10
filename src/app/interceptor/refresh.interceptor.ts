@@ -25,6 +25,7 @@ export class RefreshInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err, caught) => {
         if (err instanceof HttpErrorResponse) {
+          console.log("catch ~~~~~~~~~~~~")
           if (err.status === 403) {
             this.msg.changemessage(2)
             localStorage.clear()
