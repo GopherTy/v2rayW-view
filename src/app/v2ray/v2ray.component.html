@@ -1,5 +1,42 @@
 <mat-tab-group>
     <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-freebsd"></mat-icon>
+            用户管理
+        </ng-template>
+        <!-- 卡片布局 -->
+        <mat-card>
+            <!-- 标题 -->
+            <mat-card-title>
+                服务列表
+            </mat-card-title>
+            <!-- 子标题 -->
+            <mat-card-subtitle style="margin-top: 20px;">
+                <button mat-button color="primary">
+                    <mat-icon>library_add</mat-icon>
+                    增加服务
+                </button>
+                &nbsp;
+                <button mat-button color="primary">
+                    <mat-icon>clear_all</mat-icon>
+                    清空列表
+                </button>
+            </mat-card-subtitle>
+
+            <mat-card-content>
+                <mat-list>
+                    <mat-list-item>
+                        111
+                    </mat-list-item>
+                    <mat-list-item>
+                        2
+                    </mat-list-item>
+                </mat-list>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
+
+    <mat-tab>
         <!-- 头部 -->
         <ng-template mat-tab-label>
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-free-code-camp"></mat-icon>
@@ -7,13 +44,15 @@
         </ng-template>
         <!-- 状态 -->
         <mat-accordion>
-            <mat-expansion-panel>
+            <mat-expansion-panel class="example-headers-align" hideToggle>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        当前状态
-                        <mat-icon [style]="enabled?'color:limegreen;': 'color: grey'">wb_incandescent
-                        </mat-icon>
+                        v2ray
                     </mat-panel-title>
+                    <mat-panel-description>
+                        查看日志
+                        <mat-icon [style]="enabled?'color:limegreen;': 'color: grey'">wb_incandescent </mat-icon>
+                    </mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <mat-form-field class="log">
@@ -116,10 +155,5 @@
             </mat-card-actions>
         </mat-card>
     </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-freebsd"></mat-icon>
-            用户管理
-        </ng-template>
-    </mat-tab>
+
 </mat-tab-group>

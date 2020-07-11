@@ -24,13 +24,15 @@ export class HomeComponent implements OnInit {
       return
     }
 
+    const access = localStorage.getItem("access_token")
+    if (!this.helper.isTokenExpired(access)) {
+      this.msg.changemessage(1)
+      return
+    }
+
     this.session.refreshToken<any>(refresh).subscribe((v) => {
       localStorage.setItem("access_token", v.token.access_token)
       this.msg.changemessage(1)
     })
-    // this.router.navigateByUrl("/v2ray")
   }
-
-
-
 }

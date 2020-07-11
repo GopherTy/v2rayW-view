@@ -24,6 +24,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -49,6 +53,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatFormFieldModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    MatListModule,
+    MatDividerModule,
+    MatSidenavModule,
+    MatTooltipModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {
