@@ -28,12 +28,18 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ProtocolComponent } from './protocol/protocol.component';
+import { VmessComponent } from './vmess/vmess.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     V2rayComponent,
-    HomeComponent
+    HomeComponent,
+    ProtocolComponent,
+    VmessComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +63,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatSidenavModule,
     MatTooltipModule,
+    MatMenuModule,
+    MatDialogModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {

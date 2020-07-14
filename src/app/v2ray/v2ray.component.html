@@ -12,14 +12,24 @@
             </mat-card-title>
             <!-- 子标题 -->
             <mat-card-subtitle style="margin-top: 20px;">
-                <button mat-button color="primary">
+                <button mat-button [matMenuTriggerFor]="menu" color="primary">
                     <mat-icon>library_add</mat-icon>
-                    增加服务
+                    <span>增加服务</span>
                 </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="openVmessWindow()">
+                        <mat-icon>public </mat-icon>
+                        <span>Vmess协议</span>
+                    </button>
+                    <button mat-menu-item disabled>
+                        <mat-icon>public </mat-icon>
+                        <span>预留协议</span>
+                    </button>
+                </mat-menu>
                 &nbsp;
                 <button mat-button color="primary">
                     <mat-icon>clear_all</mat-icon>
-                    清空列表
+                    <span>清空列表</span>
                 </button>
             </mat-card-subtitle>
 
@@ -155,5 +165,4 @@
             </mat-card-actions>
         </mat-card>
     </mat-tab>
-
 </mat-tab-group>

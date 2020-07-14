@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>Vmess 配置</h2>
+
+<!-- Json  data commit -->
+<mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>别名</mat-label>
+        <input matInput>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>地址</mat-label>
+        <input matInput type="text" [(ngModel)]="params.Address">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>端口</mat-label>
+        <input matInput type="number" [(ngModel)]="params.Port">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>用户ID</mat-label>
+        <input matInput type="text" [(ngModel)]="params.UserID">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>额外ID</mat-label>
+        <input matInput type="number" [(ngModel)]="params.AlertID">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>用户等级</mat-label>
+        <input matInput type="number" [(ngModel)]="params.Level">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>加密方式</mat-label>
+        <mat-select (selectionChange)="security($event)">
+            <mat-option value="auto">auto</mat-option>
+            <mat-option value="none">none</mat-option>
+            <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
+            <mat-option value="chacha20-poly1305">chacha20-poly1305</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>传输协议</mat-label>
+        <mat-select (selectionChange)="network($event)">
+            <mat-option value="tcp">tcp</mat-option>
+            <mat-option value="kcp">kcp</mat-option>
+            <mat-option value="ws">ws</mat-option>
+            <mat-option value="h2">h2</mat-option>
+            <mat-option value="quic">quic</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>伪装域名</mat-label>
+        <textarea matInput [(ngModel)]="params.Domains"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>路径</mat-label>
+        <input matInput type="text" [(ngModel)]="params.Path">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>底层传输安全</mat-label>
+        <mat-select (selectionChange)="netSecurity($event)">
+            <mat-option value=""></mat-option>
+            <mat-option value="tls">tls</mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button [disabled]="enabled" mat-raised-button color="primary" (click)="save()">保存</button>
+    <button mat-raised-button color="primary" matDialogClose>关闭</button>
+</mat-dialog-actions>

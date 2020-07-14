@@ -8,6 +8,8 @@ import { MsgService } from '../service/msg/msg.service';
 import { SessionService } from '../service/session/session.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Stop } from '../service/v2ray/api';
+import { MatDialog } from '@angular/material/dialog';
+import { VmessComponent } from '../vmess/vmess.component';
 // import { isNull } from 'util';
 
 @Component({
@@ -31,6 +33,7 @@ export class V2rayComponent implements OnInit {
     private session: SessionService,
     private helper: JwtHelperService,
     private msg: MsgService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -135,5 +138,12 @@ export class V2rayComponent implements OnInit {
   // 开启日志
   startLogs(started: boolean) {
     this.on = started
+  }
+
+  // 打开 vmess 协议的配置窗口
+  openVmessWindow() {
+    this.dialog.open(VmessComponent, {
+      width: "45%"
+    })
   }
 }
