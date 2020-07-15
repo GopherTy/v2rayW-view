@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { ToasterService } from 'angular2-toaster';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-vmess',
   templateUrl: './vmess.component.html',
@@ -20,13 +22,33 @@ export class VmessComponent implements OnInit {
   constructor(
     private protocol: ProtocolService,
     private toaster: ToasterService,
+    private dialogRef: MatDialogRef<VmessComponent>,
+    @Inject(MAT_DIALOG_DATA) public value: any,
   ) { }
 
   ngOnInit(): void {
     this.disable = false
     this.enabled = false
-    this.params = {}
+    this.params = {
+      Protocol: "vmess",
+      UID: 1,
+    }
     this.logs = ''
+
+    if (!isNullOrUndefined(this.value)) {
+      this.params.Address = this.value.Address
+      this.params.AlertID = this.value.AlertID
+      this.params.Domains = this.value.Domains
+      this.params.Level = this.value.Level
+      this.params.NetSecurity = this.value.NetSecurity
+      this.params.NetWork = this.value.NetWork
+      this.params.Path = this.value.Path
+      this.params.Port = this.value.Port
+      this.params.Protocol = this.value.Protocol
+      this.params.Security = this.value.Security
+      this.params.UID = this.value.UID
+      this.params.UserID = this.value.UserID
+    }
   }
 
   // 加密方式
@@ -47,6 +69,7 @@ export class VmessComponent implements OnInit {
     this.protocol.save<string>(this.params).then((v) => {
       console.log(v)
       this.toaster.pop("success", "成功", v)
+      this.dialogRef.close()
     }).catch((e) => {
       console.log("save error ---> ", e)
     })

@@ -1,0 +1,8 @@
+.flex{
+    display: flex;
+    margin-top: 35px;
+}
+.fill-remaining-space{
+  flex: 1 1 auto;
+  margin-left: 20px;
+}

@@ -18,8 +18,8 @@ export class ProtocolService {
   }
 
   // 删除协议
-  delete<T>() {
-    return this.http.get<T>(Delete).toPromise()
+  delete<T>(param: any) {
+    return this.http.post<T>(Delete, param).toPromise()
   }
 
   // 修改协议
@@ -28,7 +28,7 @@ export class ProtocolService {
   }
 
   // 查询协议
-  list<T>(param: Params) {
+  list<T>(param: any) {
     return this.http.post<T>(List, param).toPromise()
   }
 }

@@ -11,8 +11,8 @@
                 服务列表
             </mat-card-title>
             <!-- 子标题 -->
-            <mat-card-subtitle style="margin-top: 20px;">
-                <button mat-button [matMenuTriggerFor]="menu" color="primary">
+            <mat-card-subtitle style="margin-top: 30px;">
+                <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
                     <mat-icon>library_add</mat-icon>
                     <span>增加服务</span>
                 </button>
@@ -27,21 +27,24 @@
                     </button>
                 </mat-menu>
                 &nbsp;
-                <button mat-button color="primary">
+                <button mat-raised-button color="primary">
                     <mat-icon>clear_all</mat-icon>
                     <span>清空列表</span>
                 </button>
             </mat-card-subtitle>
 
             <mat-card-content>
-                <mat-list>
-                    <mat-list-item>
-                        111
-                    </mat-list-item>
-                    <mat-list-item>
-                        2
-                    </mat-list-item>
-                </mat-list>
+                <ng-container *ngIf="protocols.length != 0;then ready;else load "></ng-container>
+
+                <ng-template #ready>
+                    <div *ngFor="let protocol of protocols">
+                        <app-protocol (clickEvt)="remove($event)" [value]="protocol"></app-protocol>
+                    </div>
+                </ng-template>
+
+                <ng-template #load>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
             </mat-card-content>
         </mat-card>
     </mat-tab>

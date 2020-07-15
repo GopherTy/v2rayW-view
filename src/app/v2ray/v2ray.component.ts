@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { V2rayService } from '../service/v2ray/v2ray.service';
 import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
@@ -10,6 +10,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Stop } from '../service/v2ray/api';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
+import { ProtocolService } from '../service/protocol/protocol.service';
+import { isNullOrUndefined } from 'util';
 // import { isNull } from 'util';
 
 @Component({
@@ -27,6 +29,9 @@ export class V2rayComponent implements OnInit {
   checked = true
   on = true
 
+  // 协议内容
+  protocols: Array<any>
+
   constructor(
     private v2ray: V2rayService,
     private toaster: ToasterService,
@@ -34,6 +39,7 @@ export class V2rayComponent implements OnInit {
     private helper: JwtHelperService,
     private msg: MsgService,
     private dialog: MatDialog,
+    private proto: ProtocolService,
   ) { }
 
   ngOnInit(): void {
@@ -41,6 +47,21 @@ export class V2rayComponent implements OnInit {
     this.enabled = false
     this.params = {}
     this.logs = ''
+    this.protocols = new Array<any>()
+
+    // 获取协议列表
+    this.proto.list<any>({
+      uid: 1,
+    }).then((v) => {
+      v["vmess"].forEach((data) => {
+        this.protocols.push(data)
+      })
+
+      console.log(this.protocols)
+    }).catch((e) => {
+      console.log("list error", e)
+    })
+
 
     // 登录成功后开启 ws 协议，用于开启日志
     let ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
@@ -145,5 +166,14 @@ export class V2rayComponent implements OnInit {
     this.dialog.open(VmessComponent, {
       width: "45%"
     })
+  }
+
+  // 删除
+  remove(evt: any) {
+    const index = this.protocols.indexOf(evt, 0)
+    if (index > -1) {
+      this.protocols.splice(index, 1)
+    }
+    console.log(index)
   }
 }
