@@ -1,26 +1,30 @@
 <div class="flex">
     <span style="margin-top: 10px;">
-        <mat-icon>dns</mat-icon>
+        <mat-icon color="primary">{{power? "signal_cellular_alt":"dns"}}</mat-icon>
     </span>
 
     <span class="fill-remaining-space">
-        {{data.ID}}
-        <p>{{data.Address}}</p>
+        <b class="font">名称：</b> {{data.Name}}
+        <p>
+            <b class="font">地址：</b>{{data.Address}}
+            <b class="font">协议：</b>{{data.Protocol}}
+            <b class="font">端口：</b>{{data.Port}}
+        </p>
     </span>
 
     <span>
-        <button mat-icon-button matTooltip="启动">
-            <mat-icon>play_arrow</mat-icon>
+        <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()" matTooltip="启动">
+            <mat-icon>{{power ?"stop" : "play_arrow" }} </mat-icon>
         </button>
-        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+        <button [disabled]="disable" color="primary" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
             <mat-icon>list</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openVmessWindow(data)">
+            <button [disabled]="disable" mat-menu-item (click)="openVmessWindow(data)">
                 <mat-icon>settings</mat-icon>
                 <span>修改</span>
             </button>
-            <button mat-menu-item (click)="remove(data.ID)">
+            <button [disabled]="disable" mat-menu-item (click)="remove(data)">
                 <mat-icon>delete</mat-icon>
                 <span>删除</span>
             </button>

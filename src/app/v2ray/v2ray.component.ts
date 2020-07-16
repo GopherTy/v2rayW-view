@@ -1,18 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { V2rayService } from '../service/v2ray/v2ray.service';
 import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from './param';
 import { MsgService } from '../service/msg/msg.service';
 import { SessionService } from '../service/session/session.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Stop } from '../service/v2ray/api';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
 import { ProtocolService } from '../service/protocol/protocol.service';
-import { isNullOrUndefined } from 'util';
-// import { isNull } from 'util';
+import { isNull } from 'util';
 
 @Component({
   selector: 'app-v2ray',
@@ -49,19 +47,50 @@ export class V2rayComponent implements OnInit {
     this.logs = ''
     this.protocols = new Array<any>()
 
-    // 获取协议列表
-    this.proto.list<any>({
-      uid: 1,
-    }).then((v) => {
-      v["vmess"].forEach((data) => {
-        this.protocols.push(data)
-      })
-
-      console.log(this.protocols)
-    }).catch((e) => {
-      console.log("list error", e)
+    // 订阅协议，增加到视图上。
+    this.msg.protocolSource.subscribe((protocol) => {
+      if (isNull(protocol)) {
+        return
+      }
+      this.protocols.push(protocol)
     })
 
+    // 获取协议列表
+    const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
+    this.proto.list<any>({
+      uid: userInfo.user_id,
+    }).then((v) => {
+      v.vmess.forEach((data) => {
+        this.protocols.push(data)
+      })
+    }).catch((e) => {
+      this.toaster.pop("error", "获取协议列表失败")
+    })
+
+
+    // 登录成功后开启 ws 协议，用于开启日志
+    let wsStaus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+    wsStaus.onmessage = (v) => {
+      console.log(v.data)
+    }
+    wsStaus.onerror = (v) => {
+      console.log("ws error", v)
+    }
+    wsStaus.onclose = (v) => {
+      // 刷新 token 
+      if (v.code === 5001) {
+        const refresh = localStorage.getItem("refresh_token")
+        if (refresh === '' || this.helper.isTokenExpired(refresh)) {
+          return
+        }
+
+        this.session.refreshToken<any>(refresh).subscribe((v) => {
+          localStorage.setItem("access_token", v.token.access_token)
+          this.msg.changemessage(1)
+          ws = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+        })
+      }
+    }
 
     // 登录成功后开启 ws 协议，用于开启日志
     let ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
@@ -71,7 +100,7 @@ export class V2rayComponent implements OnInit {
       }
     }
     ws.onerror = (v) => {
-      console.log(v)
+      console.log("ws error", v)
     }
     ws.onclose = (v) => {
       // 刷新 token 
@@ -120,7 +149,6 @@ export class V2rayComponent implements OnInit {
       this.enabled = true
       this.logs = ''
     }).catch((e: HttpErrorResponse) => {
-      console.log("V2ray Start Error", e)
       // 不是刷新 token 的错误，弹出错误内容。
       if (e.status == 403) {
         this.toaster.pop("warning", "长时间未操作请重新登录")
@@ -144,7 +172,6 @@ export class V2rayComponent implements OnInit {
       this.enabled = false
       this.toaster.pop("success", "关闭成功", res.data.msg)
     }).catch((e: HttpErrorResponse) => {
-      console.log("V2ray Stop Error", e)
       // 不是刷新 token 的错误，弹出错误内容。
       if (e.status == 403) {
         this.toaster.pop("warning", "长时间未操作请重新登录")
@@ -164,7 +191,10 @@ export class V2rayComponent implements OnInit {
   // 打开 vmess 协议的配置窗口
   openVmessWindow() {
     this.dialog.open(VmessComponent, {
-      width: "45%"
+      width: "45%",
+      data: {
+        "op": "add",
+      }
     })
   }
 
@@ -174,6 +204,5 @@ export class V2rayComponent implements OnInit {
     if (index > -1) {
       this.protocols.splice(index, 1)
     }
-    console.log(index)
   }
 }

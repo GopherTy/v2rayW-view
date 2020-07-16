@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Params } from '../v2ray/param';
 import { isNullOrUndefined } from 'util';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
+import { V2rayService } from '../service/v2ray/v2ray.service';
+import { BackEndData } from '../public/data';
+import { ToasterService } from 'angular2-toaster';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-protocol',
@@ -11,7 +14,10 @@ import { VmessComponent } from '../vmess/vmess.component';
   styleUrls: ['./protocol.component.css']
 })
 export class ProtocolComponent implements OnInit {
-  data: any
+  power = false // v2ray 启动状态 
+  disable = false // 按钮状态
+
+  data: any // 协议数据内容
   @Input()
   set value(data: any) {
     if (isNullOrUndefined(data)) {
@@ -19,11 +25,14 @@ export class ProtocolComponent implements OnInit {
     }
     this.data = data
   }
+
   @Output('clickEvt')
   click = new EventEmitter<any>() // 导出属性
 
   constructor(
     private protocol: ProtocolService,
+    private toaster: ToasterService,
+    private v2ray: V2rayService,
     private dialog: MatDialog,
   ) { }
 
@@ -31,15 +40,19 @@ export class ProtocolComponent implements OnInit {
   }
 
   // 删除配置
-  remove(id: number) {
+  remove(data: any) {
+    this.disable = true
+
     this.protocol.delete<any>({
-      "name": "vmess",
-      "id": id,
-    }).then((v) => {
-      console.log("success", v)
+      "name": data.Protocol,
+      "id": data.ID,
+    }).then(() => {
+      this.toaster.pop("success", "删除成功")
       this.click.emit(this.data)
-    }).catch((e) => {
-      console.log("error", e)
+    }).catch(() => {
+      this.toaster.pop("error", "删除失败")
+    }).finally(() => {
+      this.disable = false
     })
   }
 
@@ -47,7 +60,58 @@ export class ProtocolComponent implements OnInit {
   openVmessWindow(v: any) {
     this.dialog.open(VmessComponent, {
       width: "45%",
-      data: v,
+      data: {
+        "op": "update",
+        "value": v,
+      },
+    })
+  }
+
+  // 控制 v2ray 的开启和关闭
+  switch() {
+    if (this.power) {
+      this.stop()
+    } else {
+      this.start()
+    }
+  }
+
+  // 开启
+  start() {
+    this.disable = true
+
+    // 启动
+    this.v2ray.start<BackEndData>(this.data).then((res) => {
+      this.toaster.pop("success", "启动成功", res.data.msg)
+      this.power = true
+    }).catch((e: HttpErrorResponse) => {
+      // 不是刷新 token 的错误，弹出错误内容。
+      if (e.status == 403) {
+        this.toaster.pop("warning", "长时间未操作请重新登录")
+      } else {
+        this.toaster.pop("error", "启动失败", e.error.error)
+      }
+    }).finally(() => {
+      this.disable = false
+    })
+  }
+
+  // 关闭
+  stop() {
+    this.disable = true
+
+    this.v2ray.stop<BackEndData>().then((res) => {
+      this.power = false
+      this.toaster.pop("success", "关闭成功", res.data.msg)
+    }).catch((e: HttpErrorResponse) => {
+      // 不是刷新 token 的错误，弹出错误内容。
+      if (e.status == 403) {
+        this.toaster.pop("warning", "长时间未操作请重新登录")
+      } else {
+        this.toaster.pop("error", "关闭失败", e.error.error)
+      }
+    }).finally(() => {
+      this.disable = false
     })
   }
 }

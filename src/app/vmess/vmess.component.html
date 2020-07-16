@@ -4,7 +4,7 @@
 <mat-dialog-content>
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>别名</mat-label>
-        <input matInput>
+        <input matInput type="text" [(ngModel)]="params.Name">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
@@ -34,7 +34,7 @@
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>加密方式</mat-label>
-        <mat-select (selectionChange)="security($event)">
+        <mat-select [(value)]="params.Security" (selectionChange)="security($event)">
             <mat-option value="auto">auto</mat-option>
             <mat-option value="none">none</mat-option>
             <mat-option value="aes-128-gcm">aes-128-gcm</mat-option>
@@ -44,7 +44,7 @@
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>传输协议</mat-label>
-        <mat-select (selectionChange)="network($event)">
+        <mat-select [(value)]="params.NetWork" (selectionChange)="network($event)">
             <mat-option value="tcp">tcp</mat-option>
             <mat-option value="kcp">kcp</mat-option>
             <mat-option value="ws">ws</mat-option>
@@ -65,7 +65,7 @@
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>底层传输安全</mat-label>
-        <mat-select (selectionChange)="netSecurity($event)">
+        <mat-select [(value)]="params.NetSecurity" (selectionChange)="netSecurity($event)">
             <mat-option value=""></mat-option>
             <mat-option value="tls">tls</mat-option>
         </mat-select>
@@ -73,6 +73,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button [disabled]="enabled" mat-raised-button color="primary" (click)="save()">保存</button>
+    <button [disabled]="disable" mat-raised-button color="primary" (click)=" on? update(): save()">保存</button>
     <button mat-raised-button color="primary" matDialogClose>关闭</button>
 </mat-dialog-actions>

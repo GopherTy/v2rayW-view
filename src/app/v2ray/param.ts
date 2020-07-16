@@ -1,4 +1,6 @@
 export interface Params {
+    ID?: number
+    Name?: string
     Protocol?: string
     UID?: number
     Address?: string
