@@ -19,7 +19,7 @@
 }
 .log{
     background-color: white;
-    height: 90px;
+    resize: vertical;
     width: 100%;
     background-color: rgb(207, 215, 238);
 }

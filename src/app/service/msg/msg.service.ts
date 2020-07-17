@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class MsgService {
   public messageSource = new BehaviorSubject<number>(0);
   public protocolSource = new BehaviorSubject<any>(null);
+  public statusSource = new BehaviorSubject<any>(null);
 
   changemessage(single: number): void {
     this.messageSource.next(single);
@@ -14,5 +15,9 @@ export class MsgService {
 
   addProtocol(data: any): void {
     this.protocolSource.next(data)
+  }
+
+  v2rayStatus(status: any): void {
+    this.statusSource.next(status)
   }
 }

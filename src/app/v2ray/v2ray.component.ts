@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { V2rayService } from '../service/v2ray/v2ray.service';
 import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
@@ -10,14 +10,15 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
 import { ProtocolService } from '../service/protocol/protocol.service';
-import { isNull } from 'util';
+import { isNull, isNullOrUndefined } from 'util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-v2ray',
   templateUrl: './v2ray.component.html',
   styleUrls: ['./v2ray.component.css']
 })
-export class V2rayComponent implements OnInit {
+export class V2rayComponent implements OnInit, OnDestroy {
   // 是否禁用按钮
   disable: boolean
   enabled: boolean
@@ -26,6 +27,11 @@ export class V2rayComponent implements OnInit {
   logs: string
   checked = true
   on = true
+
+  // v2ray 状态
+  wsStatus: WebSocket
+  // logs 
+  wsLogs: WebSocket
 
   // 协议内容
   protocols: Array<any>
@@ -69,14 +75,14 @@ export class V2rayComponent implements OnInit {
 
 
     // 登录成功后开启 ws 协议，用于开启日志
-    let wsStaus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
-    wsStaus.onmessage = (v) => {
-      console.log(v.data)
+    this.wsStatus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+    this.wsStatus.onmessage = (v) => {
+      this.msg.v2rayStatus(v.data)
     }
-    wsStaus.onerror = (v) => {
+    this.wsStatus.onerror = (v) => {
       console.log("ws error", v)
     }
-    wsStaus.onclose = (v) => {
+    this.wsStatus.onclose = (v) => {
       // 刷新 token 
       if (v.code === 5001) {
         const refresh = localStorage.getItem("refresh_token")
@@ -87,22 +93,22 @@ export class V2rayComponent implements OnInit {
         this.session.refreshToken<any>(refresh).subscribe((v) => {
           localStorage.setItem("access_token", v.token.access_token)
           this.msg.changemessage(1)
-          ws = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+          this.wsStatus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
         })
       }
     }
 
     // 登录成功后开启 ws 协议，用于开启日志
-    let ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
-    ws.onmessage = (v) => {
+    this.wsLogs = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
+    this.wsLogs.onmessage = (v) => {
       if (this.on) {
         this.logs += v.data
       }
     }
-    ws.onerror = (v) => {
+    this.wsLogs.onerror = (v) => {
       console.log("ws error", v)
     }
-    ws.onclose = (v) => {
+    this.wsLogs.onclose = (v) => {
       // 刷新 token 
       if (v.code === 5001) {
         const refresh = localStorage.getItem("refresh_token")
@@ -113,10 +119,14 @@ export class V2rayComponent implements OnInit {
         this.session.refreshToken<any>(refresh).subscribe((v) => {
           localStorage.setItem("access_token", v.token.access_token)
           this.msg.changemessage(1)
-          ws = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
+          this.wsLogs = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
         })
       }
     }
+  }
+  ngOnDestroy(): void {
+    this.wsLogs.close()
+    this.wsStatus.close()
   }
 
   // 加密方式

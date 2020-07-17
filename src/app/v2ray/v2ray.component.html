@@ -26,18 +26,18 @@
                         <span>预留协议</span>
                     </button>
                 </mat-menu>
-                &nbsp;
+                <!-- &nbsp;
                 <button mat-raised-button color="primary">
                     <mat-icon>clear_all</mat-icon>
                     <span>清空列表</span>
-                </button>
+                </button> -->
             </mat-card-subtitle>
 
             <mat-card-content>
                 <div>
                     <mat-checkbox color="primary" [(ngModel)]="checked" (change)="startLogs($event.checked)">开启日志
                     </mat-checkbox>
-                    <textarea class="log" matInput [(ngModel)]="logs" [readonly]="true"></textarea>
+                    <textarea class="log" rows="6" matInput [(ngModel)]="logs" [readonly]="true"></textarea>
                 </div>
 
                 <ng-container *ngIf="protocols.length != 0;then ready;else load "></ng-container>
@@ -48,27 +48,26 @@
                 </ng-template>
 
                 <ng-template #load>
-                    <mat-spinner></mat-spinner>
                 </ng-template>
             </mat-card-content>
         </mat-card>
     </mat-tab>
 
-    <mat-tab>
-        <!-- 头部 -->
-        <ng-template mat-tab-label>
+    <!-- <mat-tab> -->
+    <!-- 头部 -->
+    <!-- <ng-template mat-tab-label>
             <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-optin-monster"></mat-icon>
             用户管理
-        </ng-template>
+        </ng-template> -->
 
-        <!-- 配置 -->
-        <mat-card>
+    <!-- 配置 -->
+    <!-- <mat-card>
             <mat-card-header>
                 <mat-card-title>个人信息</mat-card-title>
             </mat-card-header>
 
             <mat-card-content>
             </mat-card-content>
-        </mat-card>
-    </mat-tab>
+        </mat-card> -->
+    <!-- </mat-tab> -->
 </mat-tab-group>

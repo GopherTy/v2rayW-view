@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { isNullOrUndefined } from 'util';
+import { isNullOrUndefined, isNull } from 'util';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
@@ -7,6 +7,7 @@ import { V2rayService } from '../service/v2ray/v2ray.service';
 import { BackEndData } from '../public/data';
 import { ToasterService } from 'angular2-toaster';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MsgService } from '../service/msg/msg.service';
 
 @Component({
   selector: 'app-protocol',
@@ -34,9 +35,18 @@ export class ProtocolComponent implements OnInit {
     private toaster: ToasterService,
     private v2ray: V2rayService,
     private dialog: MatDialog,
+    private msg: MsgService,
   ) { }
 
   ngOnInit(): void {
+    this.msg.statusSource.subscribe((v) => {
+      if (!isNull(v)) {
+        const status = JSON.parse(v)
+        if (status.running && this.data.ID == status.id) {
+          this.power = true
+        }
+      }
+    })
   }
 
   // 删除配置
