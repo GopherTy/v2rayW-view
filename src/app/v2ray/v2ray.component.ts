@@ -66,6 +66,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.proto.list<any>({
       uid: userInfo.user_id,
     }).then((v) => {
+      if (v.data.vmess === null) {
+        this.toaster.pop("warning", "此用户无代理协议")
+        return
+      }
       v.data.vmess.forEach((data) => {
         this.protocols.push(data)
       })
