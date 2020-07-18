@@ -9,6 +9,7 @@ import { BackEndData } from '../data';
 import { ToasterService } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PasswdComponent } from '../passwd/passwd.component';
 
 
 @Component({
@@ -55,6 +56,12 @@ export class ToolbarComponent implements OnInit {
     this.dialog.open(JoinComponent)
   }
 
+  openPasswd() {
+    this.dialog.open(PasswdComponent, {
+      width: "500px",
+    })
+  }
+
   // 登出
   loggout() {
     this.session.logout<BackEndData>().then((v) => {
@@ -63,7 +70,6 @@ export class ToolbarComponent implements OnInit {
       localStorage.clear()
       this.router.navigateByUrl("")
     }).catch((e: HttpErrorResponse) => {
-      console.log("Loggout Error", e)
       // 不是刷新 token 的错误，弹出错误内容。
       if (e.status == 403) {
         this.toast.pop("warning", "长时间未操作请重新登录")

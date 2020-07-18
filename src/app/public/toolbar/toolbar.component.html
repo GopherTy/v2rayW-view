@@ -30,10 +30,19 @@
 
 
     <span [hidden]="hiddenIcon">
-        <button mat-button (click)="loggout()">
-            <mat-icon>directions_run</mat-icon>
-            登出
+        <button mat-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+            <mat-icon>view_list</mat-icon>
         </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openPasswd()">
+                <mat-icon>https</mat-icon>
+                修改密码
+            </button>
+            <button mat-menu-item (click)="loggout()">
+                <mat-icon>directions_run</mat-icon>
+                登出
+            </button>
+        </mat-menu>
     </span>
 
     <span [hidden]="!hiddenIcon">

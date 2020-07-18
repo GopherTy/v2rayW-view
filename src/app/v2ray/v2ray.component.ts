@@ -66,10 +66,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.proto.list<any>({
       uid: userInfo.user_id,
     }).then((v) => {
-      v.vmess.forEach((data) => {
+      v.data.vmess.forEach((data) => {
         this.protocols.push(data)
       })
-    }).catch((e) => {
+    }).catch(() => {
       this.toaster.pop("error", "获取协议列表失败")
     })
 
@@ -80,7 +80,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
       this.msg.v2rayStatus(v.data)
     }
     this.wsStatus.onerror = (v) => {
-      console.log("ws error", v)
+      console.log(v)
+      this.toaster.pop("error", "获取 v2ray 状态失败")
     }
     this.wsStatus.onclose = (v) => {
       // 刷新 token 
@@ -106,7 +107,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
     }
     this.wsLogs.onerror = (v) => {
-      console.log("ws error", v)
+      console.log(v)
+      this.toaster.pop("error", "获取 v2ray 日志失败")
     }
     this.wsLogs.onclose = (v) => {
       // 刷新 token 

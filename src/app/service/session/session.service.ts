@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Login, Join, Logout, RefreshToken } from './api';
+import { Login, Join, Logout, RefreshToken, Passwd } from './api';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -44,6 +44,14 @@ export class SessionService {
       "username": username,
       "password": password,
       "email": email,
+    }).toPromise()
+  }
+
+  // 修改密码
+  password<T>(uid: number, password: string) {
+    return this.httpClient.post<T>(Passwd, {
+      "uid": uid,
+      "passwd": password,
     }).toPromise()
   }
 }
