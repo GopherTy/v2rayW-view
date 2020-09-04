@@ -16,9 +16,12 @@
         <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()" matTooltip="启动">
             <mat-icon>{{power ?"stop" : "play_arrow" }} </mat-icon>
         </button>
-        <button [disabled]="disable" color="primary" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
-            <mat-icon>list</mat-icon>
-        </button>
+
+        <span [hidden]="power">
+            <button color="primary" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+                <mat-icon>list</mat-icon>
+            </button>
+        </span>
         <mat-menu #menu="matMenu">
             <button [disabled]="disable" mat-menu-item (click)="openVmessWindow(data)">
                 <mat-icon>settings</mat-icon>

@@ -12,6 +12,7 @@ import { VmessComponent } from '../vmess/vmess.component';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { isNull, isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
+import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
 
 @Component({
   selector: 'app-v2ray',
@@ -79,7 +80,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
 
     // 登录成功后开启 ws 协议，用于开启日志
-    this.wsStatus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+    const statusAddr = getWebSocketAddr(Status)
+    this.wsStatus = new WebSocket(statusAddr, [localStorage.getItem("access_token")])
     this.wsStatus.onmessage = (v) => {
       this.msg.v2rayStatus(v.data)
     }
@@ -98,13 +100,14 @@ export class V2rayComponent implements OnInit, OnDestroy {
         this.session.refreshToken<any>(refresh).subscribe((v) => {
           localStorage.setItem("access_token", v.token.access_token)
           this.msg.changemessage(1)
-          this.wsStatus = new WebSocket("ws://localhost:4200/api/v2ray/status", [localStorage.getItem("access_token")])
+          this.wsStatus = new WebSocket(statusAddr, [localStorage.getItem("access_token")])
         })
       }
     }
 
     // 登录成功后开启 ws 协议，用于开启日志
-    this.wsLogs = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
+    const logsAddr = getWebSocketAddr(Logs)
+    this.wsLogs = new WebSocket(logsAddr, [localStorage.getItem("access_token")])
     this.wsLogs.onmessage = (v) => {
       if (this.on) {
         this.logs += v.data
@@ -125,7 +128,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
         this.session.refreshToken<any>(refresh).subscribe((v) => {
           localStorage.setItem("access_token", v.token.access_token)
           this.msg.changemessage(1)
-          this.wsLogs = new WebSocket("ws://localhost:4200/api/v2ray/logs", [localStorage.getItem("access_token")])
+          this.wsLogs = new WebSocket(logsAddr, [localStorage.getItem("access_token")])
         })
       }
     }
