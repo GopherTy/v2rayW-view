@@ -13,7 +13,8 @@
     </span>
 
     <span>
-        <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()" matTooltip="启动">
+        <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()"
+            matTooltip="{{power?'停止':'启动'}}">
             <mat-icon>{{power ?"stop" : "play_arrow" }} </mat-icon>
         </button>
 

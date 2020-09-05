@@ -5,6 +5,7 @@ import { ToasterService } from 'angular2-toaster';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MsgService } from '../service/msg/msg.service';
+import { Vmess } from '../service/protocol/api';
 @Component({
   selector: 'app-vmess',
   templateUrl: './vmess.component.html',
@@ -32,7 +33,7 @@ export class VmessComponent implements OnInit {
     // 获取用户信息
     const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
-      Protocol: "vmess", // 固定 vmess 协议
+      Protocol: Vmess, // 固定 vmess 协议
       UID: userInfo.user_id, // 用户 id 
     }
 
@@ -45,12 +46,10 @@ export class VmessComponent implements OnInit {
       this.params.Domains = this.data.value.Domains
       this.params.Level = this.data.value.Level
       this.params.NetSecurity = this.data.value.NetSecurity
-      this.params.NetWork = this.data.value.Network
+      this.params.Network = this.data.value.Network
       this.params.Path = this.data.value.Path
       this.params.Port = this.data.value.Port
-      this.params.Protocol = this.data.value.Protocol
       this.params.Security = this.data.value.Security
-      this.params.UID = this.data.value.UID
       this.params.UserID = this.data.value.UserID
 
       this.on = true
@@ -68,7 +67,7 @@ export class VmessComponent implements OnInit {
   }
   // 传输协议
   network(evt) {
-    this.params.NetWork = evt.value
+    this.params.Network = evt.value
   }
   // 传输协议加密方式
   netSecurity(evt) {
@@ -79,8 +78,9 @@ export class VmessComponent implements OnInit {
   save() {
     this.disable = true
 
-    this.protocol.save(this.params).then(() => {
+    this.protocol.save<any>(this.params).then((value) => {
       // 通知主界面将新增的协议增加到列表里。
+      this.params.ID = value.data.id
       this.msg.addProtocol(this.params)
       this.toaster.pop("success", "增加成功")
       this.dialogRef.close()
@@ -96,6 +96,7 @@ export class VmessComponent implements OnInit {
     this.disable = true
 
     this.protocol.update(this.params).then(() => {
+      this.msg.updateProtocol(this.params)
       this.toaster.pop("success", "修改成功")
       this.dialogRef.close()
     }).catch((e) => {

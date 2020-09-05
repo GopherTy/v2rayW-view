@@ -9,7 +9,7 @@ export interface Params {
     AlertID?: number
     Level?: number
     Security?: string
-    NetWork?: string
+    Network?: string
     NetSecurity?: string
     Domains?: string
     Path?: string

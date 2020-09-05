@@ -40,10 +40,14 @@ export class ProtocolComponent implements OnInit {
 
   ngOnInit(): void {
     this.msg.statusSource.subscribe((v) => {
-      if (!isNull(v)) {
+      if (v) {
         const status = JSON.parse(v)
-        if (status.running && this.data.ID == status.id) {
+        // 运行状态
+        if (status.running && this.data.ID === status.id) {
           this.power = true
+        }
+        if (!status.running && this.data.ID === status.id) {
+          this.power = false
         }
       }
     })

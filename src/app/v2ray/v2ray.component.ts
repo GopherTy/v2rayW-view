@@ -35,6 +35,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
   wsLogs: WebSocket
 
   // 协议内容
+  _protocols: Map<number, any> = new Map<number, any>();
   protocols: Array<any>
 
   constructor(
@@ -60,6 +61,22 @@ export class V2rayComponent implements OnInit, OnDestroy {
         return
       }
       this.protocols.push(protocol)
+      this._protocols.set(protocol.ID, protocol)
+    })
+    // 修改协议
+    this.msg.updateProtocolSource.subscribe((protocol) => {
+      if (!protocol) {
+        return
+      }
+      const preProtocol = this._protocols.get(protocol.ID)
+      const index = this.protocols.indexOf(preProtocol)
+      if (index === -1) {
+        return
+      }
+      this.protocols[index] = protocol
+      this._protocols.set(protocol.ID, protocol)
+    }, (err) => {
+      console.error(err)
     })
 
     // 获取协议列表
@@ -73,6 +90,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
       v.data.vmess.forEach((data) => {
         this.protocols.push(data)
+        this._protocols.set(data.ID, data)
       })
     }).catch(() => {
       this.toaster.pop("error", "获取协议列表失败")
@@ -144,7 +162,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
   }
   // 传输协议
   network(evt) {
-    this.params.NetWork = evt.value
+    this.params.Network = evt.value
   }
   // 传输协议加密方式
   netSecurity(evt) {
@@ -223,5 +241,6 @@ export class V2rayComponent implements OnInit, OnDestroy {
     if (index > -1) {
       this.protocols.splice(index, 1)
     }
+    this._protocols.delete(evt.ID)
   }
 }
