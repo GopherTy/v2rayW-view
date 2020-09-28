@@ -8,6 +8,7 @@ import { BackEndData } from '../public/data';
 import { ToasterService } from 'angular2-toaster';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MsgService } from '../service/msg/msg.service';
+import { VlessComponent } from '../vless/vless.component';
 
 @Component({
   selector: 'app-protocol',
@@ -43,11 +44,8 @@ export class ProtocolComponent implements OnInit {
       if (v) {
         const status = JSON.parse(v)
         // 运行状态
-        if (status.running && this.data.ID === status.id) {
-          this.power = true
-        }
-        if (!status.running && this.data.ID === status.id) {
-          this.power = false
+        if (this.data.ID === status.id && this.data.Protocol == this.data.Protocol) {
+          this.power = status.running
         }
       }
     })
@@ -79,6 +77,32 @@ export class ProtocolComponent implements OnInit {
         "value": v,
       },
     })
+  }
+
+  openProtocolWindow(v: any) {
+    switch (v.Protocol) {
+      case "vmess":
+        this.dialog.open(VmessComponent, {
+          width: "45%",
+          data: {
+            "op": "update",
+            "value": v,
+          }
+        })
+        break;
+      case "vless":
+        this.dialog.open(VlessComponent, {
+          width: "45%",
+          data: {
+            "op": "update",
+            "value": v,
+          }
+        })
+        break;
+      default:
+        break;
+    }
+
   }
 
   // 控制 v2ray 的开启和关闭
