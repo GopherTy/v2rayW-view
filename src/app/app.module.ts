@@ -32,6 +32,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ProtocolComponent } from './protocol/protocol.component';
 import { VmessComponent } from './vmess/vmess.component';
+import { VlessComponent } from './vless/vless.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { VmessComponent } from './vmess/vmess.component';
     V2rayComponent,
     HomeComponent,
     ProtocolComponent,
-    VmessComponent
+    VmessComponent,
+    VlessComponent
   ],
   imports: [
     BrowserModule,

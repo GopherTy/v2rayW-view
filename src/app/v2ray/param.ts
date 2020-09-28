@@ -7,6 +7,8 @@ export interface Params {
     Port?: number
     UserID?: string
     AlertID?: number
+    Flow?: string
+    Encryption?: string
     Level?: number
     Security?: string
     Network?: string

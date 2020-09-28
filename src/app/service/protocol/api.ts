@@ -6,3 +6,4 @@ export const List = '/api/protocol/list' // 列出协议列表
 
 // 协议
 export const Vmess = "vmess"
+export const Vless = "vless"

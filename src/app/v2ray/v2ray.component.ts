@@ -13,6 +13,7 @@ import { ProtocolService } from '../service/protocol/protocol.service';
 import { isNull, isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
 import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
+import { VlessComponent } from '../vless/vless.component';
 
 @Component({
   selector: 'app-v2ray',
@@ -84,11 +85,15 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.proto.list<any>({
       uid: userInfo.user_id,
     }).then((v) => {
-      if (v.data.vmess === null) {
+      if (v.data.vmess === null && v.data.vless) {
         this.toaster.pop("warning", "此用户无代理协议")
         return
       }
       v.data.vmess.forEach((data) => {
+        this.protocols.push(data)
+        this._protocols.set(data.ID, data)
+      })
+      v.data.vless.forEach((data) => {
         this.protocols.push(data)
         this._protocols.set(data.ID, data)
       })
@@ -228,6 +233,16 @@ export class V2rayComponent implements OnInit, OnDestroy {
   // 打开 vmess 协议的配置窗口
   openVmessWindow() {
     this.dialog.open(VmessComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
+  }
+
+  // 打开 vless 协议的窗口配置
+  openVLESSWindow() {
+    this.dialog.open(VlessComponent, {
       width: "45%",
       data: {
         "op": "add",
