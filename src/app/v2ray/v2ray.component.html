@@ -57,21 +57,100 @@
         </mat-card>
     </mat-tab>
 
-    <!-- <mat-tab> -->
-    <!-- 头部 -->
-    <!-- <ng-template mat-tab-label>
-            <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-optin-monster"></mat-icon>
-            用户管理
-        </ng-template> -->
-
-    <!-- 配置 -->
-    <!-- <mat-card>
+    <mat-tab>
+        <!-- 头部 -->
+        <ng-template mat-tab-label>
+            <mat-icon class="icon" fontSet="fontawesome-far" fontIcon="fa-clipboard"></mat-icon>
+            参数设置
+        </ng-template>
+        <mat-card>
             <mat-card-header>
-                <mat-card-title>个人信息</mat-card-title>
+                <mat-card-title>配置列表</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div>
+                    <h3>基础设置</h3>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>代理服务器地址</mat-label>
+                        <input matInput type="text" [(ngModel)]="socksParam.Address">
+                    </mat-form-field>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>本地端口监听</mat-label>
+                        <input matInput type="number" [(ngModel)]="socksParam.Port">
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>协议</mat-label>
+                        <mat-select [disabled]="true" [value]="socksParam.Protocol" (selectionChange)="network($event)">
+                            <mat-option value="socks">socks</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- <div>
+                    <h3>路由设置</h3>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>本地端口监听</mat-label>
+                        <input matInput type="number" [(ngModel)]="params.Port">
+                    </mat-form-field>
+                </div> -->
+            </mat-card-content>
+
+            <mat-card-actions>
+                <button [disabled]="disable" mat-raised-button color="primary" (click)="settings()">保存</button>
+            </mat-card-actions>
+        </mat-card>
+    </mat-tab>
+
+    <mat-tab>
+        <!-- 头部 -->
+        <ng-template mat-tab-label>
+            <mat-icon class="icon" fontSet="fontawesome-far" fontIcon="fa-kiss-wink-heart"></mat-icon>
+            关于应用
+        </ng-template>
+
+        <!-- 配置 -->
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>v2rayW</mat-card-title>
             </mat-card-header>
 
             <mat-card-content>
+                <div>
+                    <h3> <b>简介</b></h3>
+                    <p>
+                        本项目为 ProjectV(迁移到 V2fly) 项目中 v2ray-core 的 web 客户端。通过网页端配置代理协议进行科学上网。
+                        目前支持 vmess,vless 协议，其他协议和更多功能将之后进行迭代开发。
+                    </p>
+                </div>
+                <div>
+                    <h3>
+                        <b>使用</b>
+                    </h3>
+                    <p>
+                        Step1: 设置浏览器的代理协议，默认代理协议为 socks5 暂不支持修改。
+                        默认代理端口为 1080 ，可以通过高级设置进行修改！
+                    </p>
+                    <p>
+                        Step2: 在服务管理里配置好正确的代理协议，点击启动按钮。
+                    </p>
+                </div>
+                <div>
+                    <h3>
+                        <b>其他</b>
+                    </h3>
+                    <p>
+                        当前 v2rayW 版本为 v1.2.0 版本更新详情说明见
+                        <a href="https://github.com/GopherTy/v2rayW/releases">release</a>。
+                        v2ray-core 版本为 v4.29.0
+                    </p>
+                    <p>
+                        若在使用过程中发现任何 bug ，或需要 v2rayW 支持的功能欢迎你向
+                        <a href="https://github.com/GopherTy/v2rayW/issues">github</a>
+                        提交 issue 进行说明。
+                    </p>
+                </div>
             </mat-card-content>
-        </mat-card> -->
-    <!-- </mat-tab> -->
+        </mat-card>
+    </mat-tab>
 </mat-tab-group>

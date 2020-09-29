@@ -46,6 +46,8 @@ export class ProtocolComponent implements OnInit {
         // 运行状态
         if (this.data.ID === status.id && this.data.Protocol == this.data.Protocol) {
           this.power = status.running
+        } else {
+          this.power = false
         }
       }
     })
@@ -69,16 +71,6 @@ export class ProtocolComponent implements OnInit {
   }
 
   // 打开窗口
-  openVmessWindow(v: any) {
-    this.dialog.open(VmessComponent, {
-      width: "45%",
-      data: {
-        "op": "update",
-        "value": v,
-      },
-    })
-  }
-
   openProtocolWindow(v: any) {
     switch (v.Protocol) {
       case "vmess":

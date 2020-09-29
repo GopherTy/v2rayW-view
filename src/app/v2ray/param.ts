@@ -16,3 +16,10 @@ export interface Params {
     Domains?: string
     Path?: string
 }
+
+// socks 参数
+export interface SocksParam {
+    Port?: number
+    Address?: string
+    Protocol?: string
+}

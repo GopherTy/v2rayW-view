@@ -3,6 +3,8 @@ export const Start = '/api/v2ray/start'
 export const Stop = '/api/v2ray/stop'
 export const Status = '/api/v2ray/status'
 export const Logs = '/api/v2ray/logs'
+export const Settings = "/api/v2ray/settings"
+export const ListSettings = "/api/v2ray/listSettings"
 
 // 获取 websocket 地址
 export function getWebSocketAddr(path: string): string {
