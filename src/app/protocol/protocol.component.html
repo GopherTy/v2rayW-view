@@ -19,7 +19,7 @@
         </button>
 
         <span [hidden]="power">
-            <button color="primary" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+            <button color="primary" [disabled]="disable" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
                 <mat-icon>list</mat-icon>
             </button>
         </span>

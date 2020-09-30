@@ -17,7 +17,7 @@ import { VlessComponent } from '../vless/vless.component';
 })
 export class ProtocolComponent implements OnInit {
   power = false // v2ray 启动状态 
-  disable = false // 按钮状态
+  disable: boolean // 按钮状态
 
   data: any // 协议数据内容
   @Input()
@@ -40,6 +40,12 @@ export class ProtocolComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // 禁用按钮状态
+    this.msg.disableSource.subscribe((b) => {
+      this.disable = b
+    })
+
+    // v2ray服务器启动状态
     this.msg.statusSource.subscribe((v) => {
       if (v) {
         const status = JSON.parse(v)
@@ -108,8 +114,7 @@ export class ProtocolComponent implements OnInit {
 
   // 开启
   start() {
-    this.disable = true
-
+    this.msg.disableButton(true)
     // 启动
     this.v2ray.start<BackEndData>(this.data).then((res) => {
       this.toaster.pop("success", "启动成功", res.data.msg)
@@ -122,13 +127,13 @@ export class ProtocolComponent implements OnInit {
         this.toaster.pop("error", "启动失败", e.error.error)
       }
     }).finally(() => {
-      this.disable = false
+      this.msg.disableButton(false)
     })
   }
 
   // 关闭
   stop() {
-    this.disable = true
+    this.msg.disableButton(true)
 
     this.v2ray.stop<BackEndData>().then((res) => {
       this.power = false
@@ -141,7 +146,7 @@ export class ProtocolComponent implements OnInit {
         this.toaster.pop("error", "关闭失败", e.error.error)
       }
     }).finally(() => {
-      this.disable = false
+      this.msg.disableButton(false)
     })
   }
 }

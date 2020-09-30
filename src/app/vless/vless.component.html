@@ -65,6 +65,8 @@
             <mat-option value="tls">tls</mat-option>
         </mat-select>
     </mat-form-field>
+
+    <mat-slide-toggle (change)="direct($event)" [checked]="params.Direct" color="primary">国内直连</mat-slide-toggle>
 </mat-dialog-content>
 
 <mat-dialog-actions>

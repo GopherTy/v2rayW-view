@@ -15,6 +15,7 @@ export interface Params {
     NetSecurity?: string
     Domains?: string
     Path?: string
+    Direct?: boolean
 }
 
 // socks 参数

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Vmess 配置</h2>
+<h2 mat-dialog-title>Vmess 配置 </h2>
 
 <!-- Json  data commit -->
 <mat-dialog-content>
@@ -70,6 +70,8 @@
             <mat-option value="tls">tls</mat-option>
         </mat-select>
     </mat-form-field>
+
+    <mat-slide-toggle (change)="direct($event)" [checked]="params.Direct" color="primary">国内直连</mat-slide-toggle>
 </mat-dialog-content>
 
 <mat-dialog-actions>

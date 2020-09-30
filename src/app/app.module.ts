@@ -33,6 +33,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ProtocolComponent } from './protocol/protocol.component';
 import { VmessComponent } from './vmess/vmess.component';
 import { VlessComponent } from './vless/vless.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { VlessComponent } from './vless/vless.component';
     MatTooltipModule,
     MatMenuModule,
     MatDialogModule,
+    MatSlideToggleModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {

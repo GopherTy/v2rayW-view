@@ -51,6 +51,7 @@ export class VmessComponent implements OnInit {
       this.params.Port = this.data.value.Port
       this.params.Security = this.data.value.Security
       this.params.UserID = this.data.value.UserID
+      this.params.Direct = this.data.value.Direct
 
       this.on = true
     }
@@ -104,5 +105,10 @@ export class VmessComponent implements OnInit {
     }).finally(() => {
       this.disable = false
     })
+  }
+
+  // 国内直连
+  direct(evt) {
+    this.params.Direct = evt.checked
   }
 }

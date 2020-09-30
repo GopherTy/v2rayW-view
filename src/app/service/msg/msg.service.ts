@@ -9,6 +9,7 @@ export class MsgService {
   public protocolSource = new BehaviorSubject<any>(null);
   public updateProtocolSource = new BehaviorSubject<any>(null);
   public statusSource = new BehaviorSubject<any>(null);
+  public disableSource = new BehaviorSubject<boolean>(false);
 
   changemessage(single: number): void {
     this.messageSource.next(single);
@@ -24,5 +25,9 @@ export class MsgService {
 
   v2rayStatus(status: any): void {
     this.statusSource.next(status)
+  }
+
+  disableButton(b: boolean): void {
+    this.disableSource.next(b)
   }
 }

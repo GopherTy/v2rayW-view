@@ -37,7 +37,7 @@ export class VlessComponent implements OnInit {
       Protocol: Vless, // vless 协议
       UID: userInfo.user_id, // 用户 id
       Flow: "",//默认为空
-      Encryption: "none", // 默认不加密
+      // Encryption: "none", // 默认不加密
     }
 
     // 修改
@@ -54,6 +54,7 @@ export class VlessComponent implements OnInit {
       this.params.Port = this.data.value.Port
       this.params.Encryption = this.data.value.Encryption
       this.params.UserID = this.data.value.UserID
+      this.params.Direct = this.data.value.Direct
 
       this.on = true
     }
@@ -109,4 +110,9 @@ export class VlessComponent implements OnInit {
     })
   }
 
+
+  // 国内直连
+  direct(evt) {
+    this.params.Direct = evt.checked
+  }
 }
