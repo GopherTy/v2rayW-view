@@ -4,7 +4,7 @@ import { ProtocolService } from '../service/protocol/protocol.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MsgService } from '../service/msg/msg.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Vmess, Vless } from '../service/protocol/api';
+import { Vless } from '../service/protocol/api';
 import { ToasterService } from 'angular2-toaster';
 
 @Component({
@@ -37,7 +37,7 @@ export class VlessComponent implements OnInit {
       Protocol: Vless, // vless 协议
       UID: userInfo.user_id, // 用户 id
       Flow: "",//默认为空
-      // Encryption: "none", // 默认不加密
+      Encryption: "none", // 默认不加密
     }
 
     // 修改

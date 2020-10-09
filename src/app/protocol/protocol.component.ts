@@ -50,7 +50,7 @@ export class ProtocolComponent implements OnInit {
       if (v) {
         const status = JSON.parse(v)
         // 运行状态
-        if (this.data.ID === status.id && this.data.Protocol == this.data.Protocol) {
+        if (this.data.ID == status.id && this.data.Protocol == status.protocol) {
           this.power = status.running
         } else {
           this.power = false

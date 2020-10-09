@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit {
     this.session.login(user, md5Pwd).then(
       (res: BackEndData) => {
         this.msg.changemessage(1)
-        this.toasterService.pop("success", res.data.msg, "欢迎你使用 V2rayWeb")
+        this.toasterService.pop("success", res.data.msg, "欢迎你使用 v2rayW")
         this.dialogRef.close()
         this.router.navigateByUrl("v2ray")
       }
