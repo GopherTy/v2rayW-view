@@ -10,7 +10,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
 import { ProtocolService } from '../service/protocol/protocol.service';
-import { isNull } from 'util';
 import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
 import { VlessComponent } from '../vless/vless.component';
 
@@ -38,7 +37,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
   wsLogs: WebSocket
 
   // 协议内容
-  _protocols: Map<number, any> = new Map<number, any>();
+  _vmessProt: Map<number, any> = new Map<number, any>();
+  _vlessProt: Map<number, any> = new Map<number, any>();
   protocols: Array<any>
 
   constructor(
@@ -80,24 +80,41 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
     // 订阅协议，增加到视图上。
     this.msg.protocolSource.subscribe((protocol) => {
-      if (isNull(protocol)) {
+      if (!protocol) {
         return
       }
       this.protocols.push(protocol)
-      this._protocols.set(protocol.ID, protocol)
+      switch (protocol.Protocol) {
+        case "vmess":
+          this._vmessProt.set(protocol.ID, protocol)
+          break;
+        case "vless":
+          this._vlessProt.set(protocol.ID, protocol)
+          break;
+      }
     })
     // 修改协议
     this.msg.updateProtocolSource.subscribe((protocol) => {
       if (!protocol) {
         return
       }
-      const preProtocol = this._protocols.get(protocol.ID)
+      let preProtocol: any
+      switch (protocol.Protocol) {
+        case "vmess":
+          preProtocol = this._vmessProt.get(protocol.ID)
+          this._vmessProt.set(protocol.ID, protocol)
+          break;
+        case "vless":
+          preProtocol = this._vlessProt.get(protocol.ID)
+          this._vlessProt.set(protocol.ID, protocol)
+          break;
+      }
+
       const index = this.protocols.indexOf(preProtocol)
       if (index === -1) {
         return
       }
       this.protocols[index] = protocol
-      this._protocols.set(protocol.ID, protocol)
     }, (err) => {
       console.error(err)
     })
@@ -114,13 +131,13 @@ export class V2rayComponent implements OnInit, OnDestroy {
       if (v.data.vmess) {
         v.data.vmess.forEach((data) => {
           this.protocols.push(data)
-          this._protocols.set(data.ID, data)
+          this._vmessProt.set(data.ID, data)
         })
       }
       if (v.data.vless) {
         v.data.vless.forEach((data) => {
           this.protocols.push(data)
-          this._protocols.set(data.ID, data)
+          this._vlessProt.set(data.ID, data)
         })
       }
     }).catch((e) => {
@@ -283,7 +300,15 @@ export class V2rayComponent implements OnInit, OnDestroy {
     if (index > -1) {
       this.protocols.splice(index, 1)
     }
-    this._protocols.delete(evt.ID)
+
+    switch (evt.Protocol) {
+      case "vmess":
+        this._vmessProt.delete(evt.ID)
+        break;
+      case "vless":
+        this._vlessProt.delete(evt.ID)
+        break;
+    }
   }
 
 
