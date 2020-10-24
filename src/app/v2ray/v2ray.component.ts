@@ -3,7 +3,7 @@ import { V2rayService } from '../service/v2ray/v2ray.service';
 import { ToasterService } from 'angular2-toaster';
 import { BackEndData } from '../public/data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Params, SocksParam } from './param';
+import { Params, SocksParam, SubscribeParam } from './param';
 import { MsgService } from '../service/msg/msg.service';
 import { SessionService } from '../service/session/session.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -30,6 +30,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   // 本地代理配置 
   socksParam: SocksParam
+  // 订阅
+  subscribeParam: SubscribeParam
 
   // v2ray 状态
   wsStatus: WebSocket
@@ -58,6 +60,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.logs = ''
     this.protocols = new Array<any>()
     this.socksParam = {}
+    this.subscribeParam = {}
 
     // 获取 v2ray 参数配置
     this.v2ray.listSettings<any>().then((v) => {
@@ -330,6 +333,35 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
     }).finally(() => {
       this.disable = false
+    })
+  }
+
+  // 订阅
+  subscribe() {
+    const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
+    this.subscribeParam.UID = userInfo.user_id
+    this.subscribeParam.URL = ""
+
+    this.proto.subscribe<any>(this.subscribeParam).then((v) => {
+      this.toaster.pop("success", "订阅成功")
+      if (!v.data.vmess && !v.data.vless) {
+        return
+      }
+      if (v.data.vmess) {
+        v.data.vmess.forEach((data) => {
+          this.protocols.push(data)
+          this._vmessProt.set(data.ID, data)
+        })
+      }
+      if (v.data.vless) {
+        v.data.vless.forEach((data) => {
+          this.protocols.push(data)
+          this._vlessProt.set(data.ID, data)
+        })
+      }
+    }).catch((e) => {
+      console.log(e)
+      this.toaster.pop("error", "订阅失败")
     })
   }
 }

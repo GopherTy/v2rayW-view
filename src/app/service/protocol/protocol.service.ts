@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Params } from 'src/app/v2ray/param';
-import { Save, Delete, Update, List } from './api';
+import { Params, SubscribeParam } from 'src/app/v2ray/param';
+import { Save, Delete, Update, List, Subscribe } from './api';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,10 @@ export class ProtocolService {
   // 查询协议
   list<T>(param: any) {
     return this.http.post<T>(List, param).toPromise()
+  }
+
+  // 订阅协议
+  subscribe<T>(param: SubscribeParam) {
+    return this.http.post<T>(Subscribe, param).toPromise()
   }
 }

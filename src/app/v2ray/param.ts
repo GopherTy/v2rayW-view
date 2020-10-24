@@ -24,3 +24,9 @@ export interface SocksParam {
     Address?: string
     Protocol?: string
 }
+
+// 订阅参数
+export interface SubscribeParam {
+    UID?: number
+    URL?: string
+}
