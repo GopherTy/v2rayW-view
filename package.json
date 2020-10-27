@@ -25,6 +25,7 @@
     "@auth0/angular-jwt": "^4.2.0",
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-regular-svg-icons": "^5.13.0",
+    "angular2-qrcode": "^2.0.3",
     "angular2-toaster": "^8.0.0",
     "rxjs": "~6.5.4",
     "ts-md5": "^1.2.7",

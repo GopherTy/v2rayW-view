@@ -34,6 +34,10 @@ import { ProtocolComponent } from './protocol/protocol.component';
 import { VmessComponent } from './vmess/vmess.component';
 import { VlessComponent } from './vless/vless.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SubscribeComponent } from './subscribe/subscribe.component';
+import { SubconfigComponent } from './subconfig/subconfig.component';
+import { QrcodeComponent } from './qrcode/qrcode.component';
+import { QRCodeModule } from 'angular2-qrcode';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     HomeComponent,
     ProtocolComponent,
     VmessComponent,
-    VlessComponent
+    VlessComponent,
+    SubscribeComponent,
+    SubconfigComponent,
+    QrcodeComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +76,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatMenuModule,
     MatDialogModule,
     MatSlideToggleModule,
+    QRCodeModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {

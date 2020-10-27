@@ -12,6 +12,7 @@ import { VmessComponent } from '../vmess/vmess.component';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
 import { VlessComponent } from '../vless/vless.component';
+import { SubconfigComponent } from '../subconfig/subconfig.component';
 
 @Component({
   selector: 'app-v2ray',
@@ -43,6 +44,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
   _vlessProt: Map<number, any> = new Map<number, any>();
   protocols: Array<any>
 
+  // 订阅地址
+  subscribes: Array<any>
+  _subscribeMap: Map<number, any> = new Map<number, any>();
+
   constructor(
     private v2ray: V2rayService,
     private toaster: ToasterService,
@@ -60,6 +65,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.logs = ''
     this.protocols = new Array<any>()
     this.socksParam = {}
+    this.subscribes = new Array<any>()
     this.subscribeParam = {}
 
     // 获取 v2ray 参数配置
@@ -122,6 +128,33 @@ export class V2rayComponent implements OnInit, OnDestroy {
       console.error(err)
     })
 
+    // 增加订阅地址
+    this.msg.addSubscribeSource.subscribe((data) => {
+      if (!data) {
+        return
+      }
+      this.subscribes.push(data)
+      this._subscribeMap.set(data.ID, data)
+    }, (err) => {
+      console.error(err)
+    })
+    // 修改订阅地址
+    this.msg.updateSubscribeSource.subscribe((data) => {
+      if (!data) {
+        return
+      }
+
+      const preData = this._subscribeMap.get(data.ID)
+      const index = this.subscribes.indexOf(preData)
+      if (index === -1) {
+        return
+      }
+      this.subscribes[index] = data
+      this._subscribeMap.set(data.ID, data)
+    }, (err) => {
+      console.error(err)
+    })
+
     // 获取协议列表
     const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
     this.proto.list<any>({
@@ -147,6 +180,23 @@ export class V2rayComponent implements OnInit, OnDestroy {
       console.log(e)
       this.toaster.pop("error", "获取协议列表失败")
     })
+
+    // 获取订阅地址
+    this.subscribeParam.UID = userInfo.user_id
+    this.proto.listSubscribeURL<any>(this.subscribeParam).
+      then((v) => {
+        if (!v.data.content) {
+          return
+        }
+        if (v.data.content) {
+          v.data.content.forEach((data) => {
+            this.subscribes.push(data)
+          })
+        }
+      }).catch((e) => {
+        console.log(e)
+        this.toaster.pop("error", "获取订阅地址失败")
+      })
 
 
     // 登录成功后开启 ws 协议，用于开启日志
@@ -297,7 +347,17 @@ export class V2rayComponent implements OnInit, OnDestroy {
     })
   }
 
-  // 删除
+  // 打开订阅窗口配置
+  openSubconfigWindow() {
+    this.dialog.open(SubconfigComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
+  }
+
+  // 删除协议
   remove(evt: any) {
     const index = this.protocols.indexOf(evt, 0)
     if (index > -1) {
@@ -336,32 +396,57 @@ export class V2rayComponent implements OnInit, OnDestroy {
     })
   }
 
-  // 订阅
+  // 订阅服务
   subscribe() {
-    const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
-    this.subscribeParam.UID = userInfo.user_id
-    this.subscribeParam.URL = ""
+    this.subscribes.forEach((param) => {
+      this.proto.subscribe<any>(param).then((v) => {
+        this.toaster.pop("success", param.Name + ": 订阅成功")
+        if (!v.data.vmess && !v.data.vless) {
+          return
+        }
+        if (v.data.vmess) {
+          v.data.vmess.forEach((data) => {
+            this.protocols.push(data)
+            this._vmessProt.set(data.ID, data)
+          })
+        }
+        if (v.data.vless) {
+          v.data.vless.forEach((data) => {
+            this.protocols.push(data)
+            this._vlessProt.set(data.ID, data)
+          })
+        }
+      }).catch((e) => {
+        console.log(e)
+        this.toaster.pop("error", param.Name + ": 订阅失败")
+      })
+    })
+  }
 
-    this.proto.subscribe<any>(this.subscribeParam).then((v) => {
-      this.toaster.pop("success", "订阅成功")
-      if (!v.data.vmess && !v.data.vless) {
-        return
-      }
-      if (v.data.vmess) {
-        v.data.vmess.forEach((data) => {
-          this.protocols.push(data)
-          this._vmessProt.set(data.ID, data)
-        })
-      }
-      if (v.data.vless) {
-        v.data.vless.forEach((data) => {
-          this.protocols.push(data)
-          this._vlessProt.set(data.ID, data)
-        })
-      }
+  // 删除订阅地址
+  removeSubscribeURL(evt: any) {
+    const index = this.subscribes.indexOf(evt, 0)
+    if (index > -1) {
+      this.subscribes.splice(index, 1)
+    }
+
+    this._subscribeMap.delete(evt.ID)
+  }
+
+
+  //清空服务列表
+  clearProtocol() {
+    const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
+    this.proto.clear({
+      UID: userInfo.user_id,
+    }).then(() => {
+      this.toaster.pop("success", "清空成功")
+      this.protocols = []
+      this._vmessProt.clear()
+      this._vlessProt.clear()
     }).catch((e) => {
       console.log(e)
-      this.toaster.pop("error", "订阅失败")
+      this.toaster.pop("error", "清空失败")
     })
   }
 }

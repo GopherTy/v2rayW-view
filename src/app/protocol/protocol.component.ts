@@ -9,6 +9,7 @@ import { ToasterService } from 'angular2-toaster';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MsgService } from '../service/msg/msg.service';
 import { VlessComponent } from '../vless/vless.component';
+import { QrcodeComponent } from '../qrcode/qrcode.component';
 
 @Component({
   selector: 'app-protocol',
@@ -100,7 +101,12 @@ export class ProtocolComponent implements OnInit {
       default:
         break;
     }
+  }
 
+  openQrCodeWindow(v: any) {
+    this.dialog.open(QrcodeComponent, {
+      data: v,
+    })
   }
 
   // 控制 v2ray 的开启和关闭

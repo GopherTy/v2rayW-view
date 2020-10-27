@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>订阅配置</h2>
+
+<!-- Json  data commit -->
+<mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>名称</mat-label>
+        <input matInput type="text" [(ngModel)]="params.Name">
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>地址</mat-label>
+        <input matInput type="text" [(ngModel)]="params.URL">
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button [disabled]="disable" mat-raised-button color="primary" (click)=" on? update(): save()">保存</button>
+    <button mat-raised-button color="primary" matDialogClose>关闭</button>
+</mat-dialog-actions>

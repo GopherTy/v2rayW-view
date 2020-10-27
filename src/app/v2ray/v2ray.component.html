@@ -31,11 +31,11 @@
                     </button>
                 </mat-menu>
                 <!-- 订阅管理 -->
-                <button style="margin-left: 30px;" mat-raised-button color="primary">
-                    <mat-icon>clear_all</mat-icon>
-                    <span>订阅管理</span>
-                </button>
                 <button style="margin-left: 30px;" mat-raised-button color="primary" (click)="subscribe()">
+                    <mat-icon>subscriptions</mat-icon>
+                    <span>订阅服务</span>
+                </button>
+                <button style="margin-left: 30px;" mat-raised-button color="primary" (click)="clearProtocol()">
                     <mat-icon>clear_all</mat-icon>
                     <span>清空列表</span>
                 </button>
@@ -56,6 +56,38 @@
                 </ng-template>
 
                 <ng-template #load>
+                </ng-template>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
+
+
+    <mat-tab>
+        <!-- 头部 -->
+        <ng-template mat-tab-label>
+            <mat-icon class="icon" fontSet="fontawesome-far" fontIcon="fa-bell"></mat-icon>
+            订阅管理
+        </ng-template>
+
+        <!-- 配置 -->
+        <mat-card>
+            <mat-card-title>订阅列表</mat-card-title>
+            <mat-card-subtitle style="margin-top: 30px;">
+                <button mat-raised-button color="primary" (click)="openSubconfigWindow()">
+                    <mat-icon>widgets</mat-icon>
+                    <span>订阅设置</span>
+                </button>
+            </mat-card-subtitle>
+
+            <mat-card-content>
+                <ng-container *ngIf="subscribes.length != 0;then fin;else none "></ng-container>
+                <ng-template #fin>
+                    <div *ngFor="let data of subscribes">
+                        <app-subscribe (clickEvt)="removeSubscribeURL($event)" [value]="data"></app-subscribe>
+                    </div>
+                </ng-template>
+
+                <ng-template #none>
                 </ng-template>
             </mat-card-content>
         </mat-card>

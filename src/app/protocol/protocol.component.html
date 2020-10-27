@@ -13,6 +13,10 @@
     </span>
 
     <span>
+        <button color="primary" mat-icon-button (click)="openQrCodeWindow(data)">
+            <mat-icon>share</mat-icon>
+        </button>
+
         <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()"
             matTooltip="{{power?'停止':'启动'}}">
             <mat-icon>{{power ?"stop" : "play_arrow" }} </mat-icon>

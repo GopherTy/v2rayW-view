@@ -1,0 +1,30 @@
+<div class="flex">
+    <span style="margin-top: 10px;">
+        <mat-icon color="primary">import_contacts</mat-icon>
+    </span>
+
+    <span class="fill-remaining-space">
+        <b class="font">名称：</b> {{data.Name}}
+        <p>
+            <b class="font">地址：</b>{{data.URL}}
+        </p>
+    </span>
+
+    <span>
+        <span>
+            <button color="primary" [disabled]="disable" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+                <mat-icon>list</mat-icon>
+            </button>
+        </span>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openSubconfigWindow(data)">
+                <mat-icon>settings</mat-icon>
+                <span>修改</span>
+            </button>
+            <button mat-menu-item (click)="remove(data)">
+                <mat-icon>delete</mat-icon>
+                <span>删除</span>
+            </button>
+        </mat-menu>
+    </span>
+</div>
