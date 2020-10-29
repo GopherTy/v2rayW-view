@@ -34,7 +34,19 @@ export class QrcodeComponent implements OnInit {
         this.value = "vmess://" + btoa(unescape(encodeURIComponent(objJsonStr)))
         break;
       case "vless":
-
+        const vls: Vless = {
+          v: this.data.Level,
+          ps: this.data.Name,
+          add: this.data.Address,
+          port: this.data.Port,
+          id: this.data.UserID,
+          encry: this.data.Encryption,
+          flow: this.data.Flow,
+          net: this.data.Network,
+          sec: this.data.NetSecurity,
+          path: this.data.Path,
+        }
+        this.value = "vless://" + btoa(unescape(encodeURIComponent(JSON.stringify(vls))))
         break;
       default:
         this.value = 'TODO'
@@ -45,7 +57,7 @@ export class QrcodeComponent implements OnInit {
 }
 
 // 主流 vmess 协议的格式
-interface Vmess {
+export interface Vmess {
   v?: string
   ps?: string
   add?: string
@@ -60,17 +72,16 @@ interface Vmess {
 }
 
 // 自定义 vless 协议的格式
-interface Vless {
-  v?: string
+export interface Vless {
+  v?: number
   ps?: string
   add?: string
-  port?: string
+  port?: number
   id?: string
-  aid?: string
+  encry?: string
+  flow?: string
   net?: string
-  type?: string
-  host?: string
+  sec?: string
   path?: string
-  tls?: string
 }
 

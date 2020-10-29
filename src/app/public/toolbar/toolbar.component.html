@@ -9,12 +9,6 @@
     <!-- This fills the remaining space of the current row -->
     <span class="fill-remaining-space"></span>
 
-    <span>
-        <a mat-button href="https://www.github.com/gopherty" target="_blank" matTooltip="Github">
-            <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-github"></mat-icon>
-        </a>
-    </span>
-
     <!-- foot -->
     <span [hidden]="hiddenIcon">
         <a mat-button href="https://www.youtube.com" target="_blank" matTooltip="Youtube">
@@ -23,7 +17,7 @@
     </span>
 
     <span [hidden]="hiddenIcon">
-        <a mat-button routerLink='/v2ray' mat-button matTooltip="v2ray配置">
+        <a mat-button routerLink='/v2ray' mat-button matTooltip="v2ray">
             <mat-icon class="v2ray" fontSet="fontawesome-fa" fontIcon="fa-paper-plane"></mat-icon>
         </a>
     </span>
@@ -54,7 +48,7 @@
 
     <span [hidden]="!hiddenIcon">
         <button mat-button (click)="openLogin()">
-            <mat-icon>login</mat-icon>
+            <mat-icon>exit_to_app</mat-icon>
             登录
         </button>
     </span>

@@ -1,6 +1,6 @@
 <div class="flex">
     <span style="margin-top: 10px;">
-        <mat-icon color="primary">{{power? "signal_cellular_alt":"dns"}}</mat-icon>
+        <mat-icon color="primary">{{power? "router":"dns"}}</mat-icon>
     </span>
 
     <span class="fill-remaining-space">
@@ -13,9 +13,25 @@
     </span>
 
     <span>
-        <button color="primary" mat-icon-button (click)="openQrCodeWindow(data)">
+        <button color="primary" mat-icon-button [matMenuTriggerFor]="share" matTooltip="分享">
             <mat-icon>share</mat-icon>
         </button>
+
+        <mat-menu #share="matMenu">
+            <button color="primary" mat-menu-item (click)="openQrCodeWindow(data)">
+                <mat-icon class="icon" fontSet="fontawesome-fas" fontIcon="fa-qrcode"></mat-icon>
+                <span>二维码</span>
+            </button>
+            <button mat-menu-item [cdkCopyToClipboard]="copyToClipboard()">
+                <mat-icon class="icon" fontSet="fontawesome-far" fontIcon="fa-clipboard"></mat-icon>
+                <span>导出到剪贴板</span>
+            </button>
+            <button mat-menu-item [cdkCopyToClipboard]="copyAllToClipboard()">
+                <mat-icon class="icon" fontSet="fontawesome-fas" fontIcon="fa-clipboard-list"></mat-icon>
+                <span>导出完整配置到剪贴板</span>
+            </button>
+        </mat-menu>
+
 
         <button [disabled]="disable" color="primary" mat-icon-button (click)="switch()"
             matTooltip="{{power?'停止':'启动'}}">

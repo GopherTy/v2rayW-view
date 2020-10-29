@@ -38,6 +38,8 @@ import { SubscribeComponent } from './subscribe/subscribe.component';
 import { SubconfigComponent } from './subconfig/subconfig.component';
 import { QrcodeComponent } from './qrcode/qrcode.component';
 import { QRCodeModule } from 'angular2-qrcode';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+
 
 @NgModule({
   declarations: [
@@ -77,6 +79,7 @@ import { QRCodeModule } from 'angular2-qrcode';
     MatDialogModule,
     MatSlideToggleModule,
     QRCodeModule,
+    ClipboardModule,
     ToasterModule.forRoot(),
     JwtModule.forRoot({
       config: {

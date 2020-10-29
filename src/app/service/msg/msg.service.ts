@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,7 @@ export class MsgService {
   public addSubscribeSource = new BehaviorSubject<any>(null);
   public updateSubscribeSource = new BehaviorSubject<any>(null);
   public statusSource = new BehaviorSubject<any>(null);
+  public localSettingSource = new BehaviorSubject<any>(null);
   public disableSource = new BehaviorSubject<boolean>(false);
 
   changemessage(single: number): void {
@@ -39,5 +40,9 @@ export class MsgService {
 
   disableButton(b: boolean): void {
     this.disableSource.next(b)
+  }
+
+  localSetting(data: any): void {
+    this.localSettingSource.next(data)
   }
 }

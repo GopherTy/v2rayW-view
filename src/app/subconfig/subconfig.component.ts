@@ -5,6 +5,7 @@ import { ProtocolService } from '../service/protocol/protocol.service';
 import { ToasterService } from 'angular2-toaster';
 import { MsgService } from '../service/msg/msg.service';
 import { SubscribeParam } from '../v2ray/param';
+import { SubscribeService } from '../service/subscribe/subscribe.service';
 
 @Component({
   selector: 'app-subconfig',
@@ -21,7 +22,7 @@ export class SubconfigComponent implements OnInit {
   on: boolean
 
   constructor(
-    private protocol: ProtocolService,
+    private subService: SubscribeService,
     private toaster: ToasterService,
     private dialogRef: MatDialogRef<SubconfigComponent>,
     private msg: MsgService,
@@ -55,7 +56,7 @@ export class SubconfigComponent implements OnInit {
   save() {
     this.disable = true
 
-    this.protocol.addSubscribeURL<any>(this.params).then((value) => {
+    this.subService.add<any>(this.params).then((value) => {
       this.params.ID = value.data.id
       this.msg.addSubscribeURL(this.params)
       this.toaster.pop("success", "增加成功")
@@ -71,7 +72,7 @@ export class SubconfigComponent implements OnInit {
   update() {
     this.disable = true
 
-    this.protocol.updateSubscribeURL<any>(this.params).then(() => {
+    this.subService.update<any>(this.params).then(() => {
       this.msg.updateSubscribeURL(this.params)
       this.toaster.pop("success", "修改成功")
       this.dialogRef.close()

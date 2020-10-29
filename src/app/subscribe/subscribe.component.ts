@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SubconfigComponent } from '../subconfig/subconfig.component';
-import { ProtocolService } from '../service/protocol/protocol.service';
 import { ToasterService } from 'angular2-toaster';
-import { MsgService } from '../service/msg/msg.service';
+import { SubscribeService } from '../service/subscribe/subscribe.service';
 
 @Component({
   selector: 'app-subscribe',
@@ -25,7 +24,7 @@ export class SubscribeComponent implements OnInit {
   click = new EventEmitter<any>() // 导出属性
 
   constructor(
-    private protocol: ProtocolService,
+    private subService: SubscribeService,
     private toaster: ToasterService,
     private dialog: MatDialog,
   ) {
@@ -49,7 +48,7 @@ export class SubscribeComponent implements OnInit {
   remove(data: any) {
     this.disable = true
 
-    this.protocol.deleteSubscribeURL<any>({
+    this.subService.delete<any>({
       ID: data.ID,
     }).then(() => {
       this.toaster.pop("success", "删除成功")

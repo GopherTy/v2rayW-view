@@ -11,7 +11,6 @@ import { switchMap, catchError } from 'rxjs/operators';
 import { SessionService } from '../service/session/session.service';
 import { Router } from '@angular/router';
 import { MsgService } from '../service/msg/msg.service';
-import { ToasterService } from 'angular2-toaster';
 
 @Injectable()
 export class RefreshInterceptor implements HttpInterceptor {
@@ -20,7 +19,6 @@ export class RefreshInterceptor implements HttpInterceptor {
     private session: SessionService,
     private router: Router,
     private msg: MsgService,
-    private toaster: ToasterService,
   ) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -34,7 +32,6 @@ export class RefreshInterceptor implements HttpInterceptor {
             return throwError(err);
           }
           if (err.status === 401) {
-            this.toaster.pop("warning", "token 已过期请刷新界面，保证数据服务状态正常")
             const refreshToken = localStorage.getItem("refresh_token")
             return this.handleToken(refreshToken).pipe(
               switchMap((v) => {

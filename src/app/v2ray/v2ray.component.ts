@@ -13,6 +13,7 @@ import { ProtocolService } from '../service/protocol/protocol.service';
 import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
 import { VlessComponent } from '../vless/vless.component';
 import { SubconfigComponent } from '../subconfig/subconfig.component';
+import { SubscribeService } from '../service/subscribe/subscribe.service';
 
 @Component({
   selector: 'app-v2ray',
@@ -56,6 +57,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
     private msg: MsgService,
     private dialog: MatDialog,
     private proto: ProtocolService,
+    private subSerivce: SubscribeService,
   ) { }
 
   ngOnInit(): void {
@@ -83,6 +85,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
       this.socksParam.Address = settings.address
       this.socksParam.Port = settings.port
       this.socksParam.Protocol = settings.protocol
+
+      this.msg.localSetting(this.socksParam)
     }).catch((e) => {
       this.toaster.pop("error", "获取参数配置失败", e.error)
     })
@@ -183,7 +187,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
     // 获取订阅地址
     this.subscribeParam.UID = userInfo.user_id
-    this.proto.listSubscribeURL<any>(this.subscribeParam).
+    this.subSerivce.list<any>(this.subscribeParam).
       then((v) => {
         if (!v.data.content) {
           return
@@ -399,7 +403,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
   // 订阅服务
   subscribe() {
     this.subscribes.forEach((param) => {
-      this.proto.subscribe<any>(param).then((v) => {
+      this.subSerivce.subscribe<any>(param).then((v) => {
         this.toaster.pop("success", param.Name + ": 订阅成功")
         if (!v.data.vmess && !v.data.vless) {
           return
@@ -432,7 +436,6 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
     this._subscribeMap.delete(evt.ID)
   }
-
 
   //清空服务列表
   clearProtocol() {
