@@ -22,10 +22,10 @@
         <input matInput type="text" [(ngModel)]="params.UserID">
     </mat-form-field>
 
-    <!-- <mat-form-field class="full-width" appearance="outline">
+    <mat-form-field class="full-width" appearance="outline">
         <mat-label>flow</mat-label>
         <input matInput type="text" [(ngModel)]="params.Flow">
-    </mat-form-field> -->
+    </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>加密(encryption)</mat-label>
@@ -63,6 +63,7 @@
         <mat-select [(value)]="params.NetSecurity" (selectionChange)="netSecurity($event)">
             <mat-option value=""></mat-option>
             <mat-option value="tls">tls</mat-option>
+            <mat-option value="xtls">xtls</mat-option>
         </mat-select>
     </mat-form-field>
 

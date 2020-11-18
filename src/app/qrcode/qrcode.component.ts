@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Vmess, Vless, Socks } from '../service/protocol/api';
+import { URL } from 'url';
 
 @Component({
   selector: 'app-qrcode',
@@ -16,7 +18,7 @@ export class QrcodeComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.data.Protocol) {
-      case "vmess":
+      case Vmess:
         const vms: Vmess = {
           v: this.data.Level,
           ps: this.data.Name,
@@ -33,7 +35,7 @@ export class QrcodeComponent implements OnInit {
         let objJsonStr = JSON.stringify(vms);
         this.value = "vmess://" + btoa(unescape(encodeURIComponent(objJsonStr)))
         break;
-      case "vless":
+      case Vless:
         const vls: Vless = {
           v: this.data.Level,
           ps: this.data.Name,
@@ -47,6 +49,12 @@ export class QrcodeComponent implements OnInit {
           path: this.data.Path,
         }
         this.value = "vless://" + btoa(unescape(encodeURIComponent(JSON.stringify(vls))))
+        break;
+      case Socks:
+        const socks = this.data.User + ":" + this.data.Passwd + "@" +
+          this.data.Address + ":" + this.data.Port
+        this.value = "socks://" + btoa(unescape(encodeURIComponent(JSON.stringify(socks)))) +
+          "#" + encodeURI(this.data.Name)
         break;
       default:
         this.value = 'TODO'

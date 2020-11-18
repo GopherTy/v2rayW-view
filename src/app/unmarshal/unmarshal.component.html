@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>剪贴板导入</h2>
+<mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>内容</mat-label>
+        <input matInput type="text" [(ngModel)]="content">
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button [disabled]="false" mat-raised-button color="primary" (click)="import()">确认</button>
+    <button mat-raised-button color="primary" matDialogClose>关闭</button>
+</mat-dialog-actions>

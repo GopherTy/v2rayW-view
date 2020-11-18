@@ -15,6 +15,11 @@ export interface Params {
     NetSecurity?: string
     Domains?: string
     Path?: string
+
+    // socks 协议
+    User?: string
+    Passwd?: string
+
     Direct?: boolean
 }
 

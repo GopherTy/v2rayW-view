@@ -11,6 +11,7 @@ import { MsgService } from '../service/msg/msg.service';
 import { VlessComponent } from '../vless/vless.component';
 import { QrcodeComponent, Vmess, Vless } from '../qrcode/qrcode.component';
 import { SocksParam } from '../v2ray/param';
+import { SocksComponent } from '../socks/socks.component';
 
 @Component({
   selector: 'app-protocol',
@@ -110,6 +111,15 @@ export class ProtocolComponent implements OnInit {
         break;
       case "vless":
         this.dialog.open(VlessComponent, {
+          width: "45%",
+          data: {
+            "op": "update",
+            "value": v,
+          }
+        })
+        break;
+      case "socks":
+        this.dialog.open(SocksComponent, {
           width: "45%",
           data: {
             "op": "update",

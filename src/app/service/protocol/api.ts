@@ -8,3 +8,4 @@ export const Clear = '/api/protocol/clear' // 清空协议列表
 // 协议
 export const Vmess = "vmess"
 export const Vless = "vless"
+export const Socks = "socks"

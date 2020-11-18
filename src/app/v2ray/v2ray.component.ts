@@ -14,6 +14,9 @@ import { getWebSocketAddr, Status, Logs } from '../service/v2ray/api';
 import { VlessComponent } from '../vless/vless.component';
 import { SubconfigComponent } from '../subconfig/subconfig.component';
 import { SubscribeService } from '../service/subscribe/subscribe.service';
+import { UnmarshalComponent } from '../unmarshal/unmarshal.component';
+import { SocksComponent } from '../socks/socks.component';
+import { Vmess, Vless, Socks } from '../service/protocol/api';
 
 @Component({
   selector: 'app-v2ray',
@@ -43,6 +46,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
   // 协议内容
   _vmessProt: Map<number, any> = new Map<number, any>();
   _vlessProt: Map<number, any> = new Map<number, any>();
+  _socksProt: Map<number, any> = new Map<number, any>();
   protocols: Array<any>
 
   // 订阅地址
@@ -98,11 +102,14 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
       this.protocols.push(protocol)
       switch (protocol.Protocol) {
-        case "vmess":
+        case Vmess:
           this._vmessProt.set(protocol.ID, protocol)
           break;
-        case "vless":
+        case Vless:
           this._vlessProt.set(protocol.ID, protocol)
+          break;
+        case Socks:
+          this._socksProt.set(protocol.ID, protocol)
           break;
       }
     })
@@ -113,13 +120,17 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
       let preProtocol: any
       switch (protocol.Protocol) {
-        case "vmess":
+        case Vmess:
           preProtocol = this._vmessProt.get(protocol.ID)
           this._vmessProt.set(protocol.ID, protocol)
           break;
-        case "vless":
+        case Vless:
           preProtocol = this._vlessProt.get(protocol.ID)
           this._vlessProt.set(protocol.ID, protocol)
+          break;
+        case Socks:
+          preProtocol = this._socksProt.get(protocol.ID)
+          this._socksProt.set(protocol.ID, protocol)
           break;
       }
 
@@ -164,8 +175,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.proto.list<any>({
       uid: userInfo.user_id,
     }).then((v) => {
-      if (!v.data.vmess && !v.data.vless) {
-        this.toaster.pop("warning", "此用户无代理协议")
+      if (!v.data.vmess && !v.data.vless && !v.data.socks) {
+        this.toaster.pop("warning", "暂无代理协议")
         return
       }
       if (v.data.vmess) {
@@ -178,6 +189,12 @@ export class V2rayComponent implements OnInit, OnDestroy {
         v.data.vless.forEach((data) => {
           this.protocols.push(data)
           this._vlessProt.set(data.ID, data)
+        })
+      }
+      if (v.data.socks) {
+        v.data.socks.forEach((data) => {
+          this.protocols.push(data)
+          this._socksProt.set(data.ID, data)
         })
       }
     }).catch((e) => {
@@ -351,6 +368,34 @@ export class V2rayComponent implements OnInit, OnDestroy {
     })
   }
 
+
+  // 打开 socks 协议的窗口配置
+  openSocksWindow() {
+    this.dialog.open(SocksComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
+  }
+
+  // 打开 shadowsocks 协议的窗口配置
+  openShadowsocksWindow() {
+  }
+  // 打开 trojan 协议的窗口配置
+  openTrojanWindow() {
+  }
+
+  // 打开 URL 导入窗口
+  openLoadConfigWindow() {
+    this.dialog.open(UnmarshalComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
+  }
+
   // 打开订阅窗口配置
   openSubconfigWindow() {
     this.dialog.open(SubconfigComponent, {
@@ -369,10 +414,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
     }
 
     switch (evt.Protocol) {
-      case "vmess":
+      case Vmess:
         this._vmessProt.delete(evt.ID)
         break;
-      case "vless":
+      case Vless:
         this._vlessProt.delete(evt.ID)
         break;
     }

@@ -39,6 +39,8 @@ import { SubconfigComponent } from './subconfig/subconfig.component';
 import { QrcodeComponent } from './qrcode/qrcode.component';
 import { QRCodeModule } from 'angular2-qrcode';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { UnmarshalComponent } from './unmarshal/unmarshal.component';
+import { SocksComponent } from './socks/socks.component';
 
 
 @NgModule({
@@ -51,7 +53,9 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     VlessComponent,
     SubscribeComponent,
     SubconfigComponent,
-    QrcodeComponent
+    QrcodeComponent,
+    UnmarshalComponent,
+    SocksComponent
   ],
   imports: [
     BrowserModule,
