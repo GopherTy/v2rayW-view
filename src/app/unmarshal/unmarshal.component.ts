@@ -5,6 +5,7 @@ import { MsgService } from '../service/msg/msg.service';
 import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Vmess, Vless, Socks } from '../service/protocol/api';
 
 @Component({
   selector: 'app-unmarshal',
@@ -43,11 +44,11 @@ export class UnmarshalComponent implements OnInit {
 
     const uid = this.jwt.decodeToken(this.jwt.tokenGetter()).user_id
     switch (protName.toUpperCase()) {
-      case "VLESS":
+      case Vless:
         const s = this.b64_to_utf8(protContent)
         console.log(s)
         break;
-      case "VMESS":
+      case Vmess:
         const vmess = JSON.parse(this.b64_to_utf8(protContent))
         this.protocol = {
           Protocol: "vmess",
@@ -73,6 +74,9 @@ export class UnmarshalComponent implements OnInit {
           console.log(e)
           this.toaster.pop("error", "导入失败")
         })
+        break;
+      case Socks:
+
         break;
       default:
         this.toaster.pop("warning", "导入失败", "暂不支持该协议")

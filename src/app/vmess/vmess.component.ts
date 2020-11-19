@@ -35,6 +35,12 @@ export class VmessComponent implements OnInit {
     this.params = {
       Protocol: Vmess, // 固定 vmess 协议
       UID: userInfo.user_id, // 用户 id 
+
+      //  v2fly 官方文档配置说明的推荐默认值
+      AlertID: 0,
+      Security: "auto",
+      Network: "tcp",
+      NetSecurity: "none",
     }
 
     // 修改

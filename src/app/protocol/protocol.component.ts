@@ -174,6 +174,12 @@ export class ProtocolComponent implements OnInit {
         }
         content = "vless://" + btoa(unescape(encodeURIComponent(JSON.stringify(vls))))
         break;
+      case "socks":
+        const socks = this.data.User + ":" + this.data.Passwd + "@" +
+          this.data.Address + ":" + this.data.Port
+        content = "socks://" + btoa(socks) +
+          "#" + encodeURI(this.data.Name)
+        break;
       default:
         content = 'TODO'
         break;

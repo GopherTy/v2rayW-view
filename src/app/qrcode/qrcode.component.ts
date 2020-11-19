@@ -53,7 +53,7 @@ export class QrcodeComponent implements OnInit {
       case Socks:
         const socks = this.data.User + ":" + this.data.Passwd + "@" +
           this.data.Address + ":" + this.data.Port
-        this.value = "socks://" + btoa(unescape(encodeURIComponent(JSON.stringify(socks)))) +
+        this.value = "socks://" + btoa(socks) +
           "#" + encodeURI(this.data.Name)
         break;
       default:

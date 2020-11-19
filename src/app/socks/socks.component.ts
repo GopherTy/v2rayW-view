@@ -15,8 +15,11 @@ import { Socks } from '../service/protocol/api';
 export class SocksComponent implements OnInit {
   // 是否禁用按钮
   disable = false
+  // 显示密码
+  hide = true
   // 启动配置参数
   params: Params
+
 
   // 控制增加或者修改的开关，默认增加。
   on: boolean
