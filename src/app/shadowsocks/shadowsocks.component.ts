@@ -1,30 +1,32 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
+import { ToasterService } from 'angular2-toaster';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MsgService } from '../service/msg/msg.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Vless } from '../service/protocol/api';
-import { ToasterService } from 'angular2-toaster';
+import { Shadowsocks } from '../service/protocol/api';
 
 @Component({
-  selector: 'app-vless',
-  templateUrl: './vless.component.html',
-  styleUrls: ['./vless.component.css']
+  selector: 'app-shadowsocks',
+  templateUrl: './shadowsocks.component.html',
+  styleUrls: ['./shadowsocks.component.css']
 })
-export class VlessComponent implements OnInit {
+export class ShadowsocksComponent implements OnInit {
   // 是否禁用按钮
   disable = false
+  // 显示密码
+  hide = true
   // 启动配置参数
   params: Params
 
+
   // 控制增加或者修改的开关，默认增加。
   on: boolean
-
   constructor(
     private protocol: ProtocolService,
     private toaster: ToasterService,
-    private dialogRef: MatDialogRef<VlessComponent>,
+    private dialogRef: MatDialogRef<ShadowsocksComponent>,
     private msg: MsgService,
     private jwt: JwtHelperService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -34,28 +36,20 @@ export class VlessComponent implements OnInit {
     // 获取用户信息
     const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
-      Protocol: Vless, // vless 协议
+      Protocol: Shadowsocks, // shadowsocks 协议
       UID: userInfo.user_id, // 用户 id
 
-      NetSecurity: "none",// 默认为none
-      Flow: "",//默认为空
-      Encryption: "none", // 默认不加密
+      Security: "none" // 默认值
     }
 
     // 修改
-    if (this.data.op === 'update') {
+    if (this.data.op === "update") {
       this.params.ID = this.data.value.ID
       this.params.Name = this.data.value.Name
       this.params.Address = this.data.value.Address
-      this.params.Flow = this.data.value.Flow // 预留 flow
-      this.params.Domains = this.data.value.Domains
-      this.params.Level = this.data.value.Level
-      this.params.NetSecurity = this.data.value.NetSecurity
-      this.params.Network = this.data.value.Network
-      this.params.Path = this.data.value.Path
       this.params.Port = this.data.value.Port
-      this.params.Encryption = this.data.value.Encryption
-      this.params.UserID = this.data.value.UserID
+      this.params.Passwd = this.data.value.Passwd
+      this.params.Security = this.data.value.Security
       this.params.Direct = this.data.value.Direct
 
       this.on = true
@@ -67,20 +61,8 @@ export class VlessComponent implements OnInit {
     }
   }
 
-  // 加密方式
-  security(evt) {
-    this.params.Security = evt.value
-  }
-  // 传输协议
-  network(evt) {
-    this.params.Network = evt.value
-  }
-  // 传输协议加密方式
-  netSecurity(evt) {
-    this.params.NetSecurity = evt.value
-  }
 
-  // 保存协议
+  // 增加
   save() {
     this.disable = true
 
@@ -97,7 +79,7 @@ export class VlessComponent implements OnInit {
     })
   }
 
-  // 修改协议
+  // 修改
   update() {
     this.disable = true
 
@@ -112,7 +94,10 @@ export class VlessComponent implements OnInit {
     })
   }
 
-
+  // 加密方式
+  security(evt) {
+    this.params.Security = evt.value
+  }
   // 国内直连
   direct(evt) {
     this.params.Direct = evt.checked

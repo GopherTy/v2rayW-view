@@ -29,6 +29,10 @@
                         <mat-icon>public </mat-icon>
                         <span>Socks协议</span>
                     </button>
+                    <button mat-menu-item (click)="openShadowsocksWindow()">
+                        <mat-icon>public </mat-icon>
+                        <span>Shadowsocks协议</span>
+                    </button>
                     <button mat-menu-item (click)="openLoadConfigWindow()">
                         <mat-icon>public </mat-icon>
                         <span>剪贴板导入</span>
@@ -159,7 +163,7 @@
                 <div>
                     <h3> <b>简介</b></h3>
                     <p>
-                        本项目为 ProjectV(迁移到 V2fly) 项目中 v2ray-core 的 web 客户端。通过网页端配置代理协议进行科学上网。
+                        本项目为 ProjectV(迁移至 V2fly) 项目中 v2ray-core 的 web 客户端。通过网页端配置代理协议进行科学上网。
                         目前支持 vmess,vless 协议，其他协议和更多功能将之后进行迭代开发。
                     </p>
                 </div>

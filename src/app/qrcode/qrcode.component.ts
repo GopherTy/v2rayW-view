@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Vmess, Vless, Socks } from '../service/protocol/api';
+import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
 import { URL } from 'url';
 
 @Component({
@@ -54,6 +54,12 @@ export class QrcodeComponent implements OnInit {
         const socks = this.data.User + ":" + this.data.Passwd + "@" +
           this.data.Address + ":" + this.data.Port
         this.value = "socks://" + btoa(socks) +
+          "#" + encodeURI(this.data.Name)
+        break;
+      case Shadowsocks:
+        const ss = this.data.Security + ":" + this.data.Passwd + "@" +
+          this.data.Address + ":" + this.data.Port
+        this.value = "ss://" + btoa(ss) +
           "#" + encodeURI(this.data.Name)
         break;
       default:

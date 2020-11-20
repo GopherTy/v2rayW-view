@@ -16,7 +16,8 @@ import { SubconfigComponent } from '../subconfig/subconfig.component';
 import { SubscribeService } from '../service/subscribe/subscribe.service';
 import { UnmarshalComponent } from '../unmarshal/unmarshal.component';
 import { SocksComponent } from '../socks/socks.component';
-import { Vmess, Vless, Socks } from '../service/protocol/api';
+import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
+import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
 
 @Component({
   selector: 'app-v2ray',
@@ -47,6 +48,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
   _vmessProt: Map<number, any> = new Map<number, any>();
   _vlessProt: Map<number, any> = new Map<number, any>();
   _socksProt: Map<number, any> = new Map<number, any>();
+  _shadowsocksProt: Map<number, any> = new Map<number, any>();
   protocols: Array<any>
 
   // 订阅地址
@@ -111,6 +113,9 @@ export class V2rayComponent implements OnInit, OnDestroy {
         case Socks:
           this._socksProt.set(protocol.ID, protocol)
           break;
+        case Shadowsocks:
+          this._shadowsocksProt.set(protocol.ID, protocol)
+          break;
       }
     })
     // 修改协议
@@ -131,6 +136,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
         case Socks:
           preProtocol = this._socksProt.get(protocol.ID)
           this._socksProt.set(protocol.ID, protocol)
+          break;
+        case Shadowsocks:
+          preProtocol = this._shadowsocksProt.get(protocol.ID)
+          this._shadowsocksProt.set(protocol.ID, protocol)
           break;
       }
 
@@ -175,7 +184,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.proto.list<any>({
       uid: userInfo.user_id,
     }).then((v) => {
-      if (!v.data.vmess && !v.data.vless && !v.data.socks) {
+      if (!v.data.vmess && !v.data.vless &&
+        !v.data.socks && !v.data.shadowsocks) {
         this.toaster.pop("warning", "暂无代理协议")
         return
       }
@@ -195,6 +205,12 @@ export class V2rayComponent implements OnInit, OnDestroy {
         v.data.socks.forEach((data) => {
           this.protocols.push(data)
           this._socksProt.set(data.ID, data)
+        })
+      }
+      if (v.data.shadowsocks) {
+        v.data.shadowsocks.forEach((data) => {
+          this.protocols.push(data)
+          this._shadowsocksProt.set(data.ID, data)
         })
       }
     }).catch((e) => {
@@ -381,9 +397,12 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   // 打开 shadowsocks 协议的窗口配置
   openShadowsocksWindow() {
-  }
-  // 打开 trojan 协议的窗口配置
-  openTrojanWindow() {
+    this.dialog.open(ShadowsocksComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
   }
 
   // 打开 URL 导入窗口
@@ -420,6 +439,12 @@ export class V2rayComponent implements OnInit, OnDestroy {
       case Vless:
         this._vlessProt.delete(evt.ID)
         break;
+      case Socks:
+        this._socksProt.delete(evt.ID)
+        break;
+      case Shadowsocks:
+        this._socksProt.delete(evt.ID)
+        break;
     }
   }
 
@@ -450,7 +475,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.subscribes.forEach((param) => {
       this.subSerivce.subscribe<any>(param).then((v) => {
         this.toaster.pop("success", param.Name + ": 订阅成功")
-        if (!v.data.vmess && !v.data.vless) {
+        if (!v.data.vmess && !v.data.vless && !v.data.socks && v.data.shadowsocks) {
           return
         }
         if (v.data.vmess) {
@@ -463,6 +488,18 @@ export class V2rayComponent implements OnInit, OnDestroy {
           v.data.vless.forEach((data) => {
             this.protocols.push(data)
             this._vlessProt.set(data.ID, data)
+          })
+        }
+        if (v.data.socks) {
+          v.data.socks.forEach((data) => {
+            this.protocols.push(data)
+            this._socksProt.set(data.ID, data)
+          })
+        }
+        if (v.data.shadowsocks) {
+          v.data.shadowsocks.forEach((data) => {
+            this.protocols.push(data)
+            this._shadowsocksProt.set(data.ID, data)
           })
         }
       }).catch((e) => {

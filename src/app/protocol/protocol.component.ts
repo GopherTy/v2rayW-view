@@ -12,6 +12,7 @@ import { VlessComponent } from '../vless/vless.component';
 import { QrcodeComponent, Vmess, Vless } from '../qrcode/qrcode.component';
 import { SocksParam } from '../v2ray/param';
 import { SocksComponent } from '../socks/socks.component';
+import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
 
 @Component({
   selector: 'app-protocol',
@@ -127,6 +128,15 @@ export class ProtocolComponent implements OnInit {
           }
         })
         break;
+      case "shadowsocks":
+        this.dialog.open(ShadowsocksComponent, {
+          width: "45%",
+          data: {
+            "op": "update",
+            "value": v,
+          }
+        })
+        break;
       default:
         break;
     }
@@ -180,6 +190,11 @@ export class ProtocolComponent implements OnInit {
         content = "socks://" + btoa(socks) +
           "#" + encodeURI(this.data.Name)
         break;
+      case "shadowsocks":
+        const ss = this.data.Security + ":" + this.data.Passwd + "@" +
+          this.data.Address + ":" + this.data.Port
+        content = "ss://" + btoa(ss) +
+          "#" + encodeURI(this.data.Name)
       default:
         content = 'TODO'
         break;

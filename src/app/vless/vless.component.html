@@ -49,7 +49,7 @@
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
-        <mat-label>伪装域名</mat-label>
+        <mat-label>域名</mat-label>
         <textarea matInput [(ngModel)]="params.Domains"></textarea>
     </mat-form-field>
 
@@ -61,7 +61,7 @@
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>底层传输安全</mat-label>
         <mat-select [(value)]="params.NetSecurity" (selectionChange)="netSecurity($event)">
-            <mat-option value=""></mat-option>
+            <mat-option value="none">none</mat-option>
             <mat-option value="tls">tls</mat-option>
             <mat-option value="xtls">xtls</mat-option>
         </mat-select>
