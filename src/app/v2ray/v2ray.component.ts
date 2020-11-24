@@ -18,6 +18,7 @@ import { UnmarshalComponent } from '../unmarshal/unmarshal.component';
 import { SocksComponent } from '../socks/socks.component';
 import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
 import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
+import { ConfigfileComponent } from '../configfile/configfile.component';
 
 @Component({
   selector: 'app-v2ray',
@@ -267,7 +268,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.wsLogs = new WebSocket(logsAddr, [localStorage.getItem("access_token")])
     this.wsLogs.onmessage = (v) => {
       if (this.on) {
-        this.logs += v.data
+        this.logs = v.data + this.logs
       }
     }
     this.wsLogs.onerror = (v) => {
@@ -414,6 +415,15 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }
     })
   }
+  // 完整配置导入
+  openLoadConfigFileWindow() {
+    this.dialog.open(ConfigfileComponent, {
+      width: "45%",
+      data: {
+        "op": "add",
+      }
+    })
+  }
 
   // 打开订阅窗口配置
   openSubconfigWindow() {
@@ -472,6 +482,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   // 订阅服务
   subscribe() {
+    this.disable = true
     this.subscribes.forEach((param) => {
       this.subSerivce.subscribe<any>(param).then((v) => {
         this.toaster.pop("success", param.Name + ": 订阅成功")
@@ -505,6 +516,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
       }).catch((e) => {
         console.log(e)
         this.toaster.pop("error", param.Name + ": 订阅失败")
+      }).finally(() => {
+        this.disable = false
       })
     })
   }
@@ -521,6 +534,8 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   //清空服务列表
   clearProtocol() {
+    this.disable = true
+
     const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
     this.proto.clear({
       UID: userInfo.user_id,
@@ -529,9 +544,18 @@ export class V2rayComponent implements OnInit, OnDestroy {
       this.protocols = []
       this._vmessProt.clear()
       this._vlessProt.clear()
+      this._shadowsocksProt.clear()
+      this._socksProt.clear()
     }).catch((e) => {
       console.log(e)
       this.toaster.pop("error", "清空失败")
+    }).finally(() => {
+      this.disable = false
     })
+  }
+
+  // 清空日志
+  clearLog() {
+    this.logs = ''
   }
 }

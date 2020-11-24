@@ -13,7 +13,7 @@
     </span>
 
     <span>
-        <button color="primary" mat-icon-button [matMenuTriggerFor]="share" matTooltip="分享">
+        <button color="primary" [disabled]="VLess" mat-icon-button [matMenuTriggerFor]="share" matTooltip="分享">
             <mat-icon>share</mat-icon>
         </button>
 
@@ -47,6 +47,10 @@
             <button [disabled]="disable" mat-menu-item (click)="openProtocolWindow(data)">
                 <mat-icon>settings</mat-icon>
                 <span>修改</span>
+            </button>
+            <button [disabled]="disable" mat-menu-item (click)="openConfigFileWindow(data)">
+                <mat-icon>description</mat-icon>
+                <span>配置文件</span>
             </button>
             <button [disabled]="disable" mat-menu-item (click)="remove(data)">
                 <mat-icon>delete</mat-icon>

@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>完整配置文件</h2>
+
+<!-- Json  data commit -->
+<mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+        <textarea [disabled]="disable" rows="20" matInput [(ngModel)]="params.ConfigFile"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button [disabled]="disable" mat-raised-button color="primary" (click)="on? update(): load()">保存</button>
+    <button mat-raised-button color="primary" matDialogClose>关闭</button>
+</mat-dialog-actions>

@@ -42,6 +42,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { UnmarshalComponent } from './unmarshal/unmarshal.component';
 import { SocksComponent } from './socks/socks.component';
 import { ShadowsocksComponent } from './shadowsocks/shadowsocks.component';
+import { ConfigfileComponent } from './configfile/configfile.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { ShadowsocksComponent } from './shadowsocks/shadowsocks.component';
     QrcodeComponent,
     UnmarshalComponent,
     SocksComponent,
-    ShadowsocksComponent
+    ShadowsocksComponent,
+    ConfigfileComponent
   ],
   imports: [
     BrowserModule,

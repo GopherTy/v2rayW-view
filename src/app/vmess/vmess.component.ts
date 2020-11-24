@@ -88,6 +88,7 @@ export class VmessComponent implements OnInit {
     this.protocol.save<any>(this.params).then((value) => {
       // 通知主界面将新增的协议增加到列表里。
       this.params.ID = value.data.id
+      this.params.ConfigFile = value.data.cnf
       this.msg.addProtocol(this.params)
       this.toaster.pop("success", "增加成功")
       this.dialogRef.close()
@@ -102,11 +103,12 @@ export class VmessComponent implements OnInit {
   update() {
     this.disable = true
 
-    this.protocol.update(this.params).then(() => {
+    this.protocol.update<any>(this.params).then((v) => {
+      this.params.ConfigFile = v.data.cnf
       this.msg.updateProtocol(this.params)
       this.toaster.pop("success", "修改成功")
       this.dialogRef.close()
-    }).catch((e) => {
+    }).catch(() => {
       this.toaster.pop("error", "修改失败")
     }).finally(() => {
       this.disable = false

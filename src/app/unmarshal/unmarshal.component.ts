@@ -5,7 +5,6 @@ import { MsgService } from '../service/msg/msg.service';
 import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Vmess, Vless, Socks } from '../service/protocol/api';
 
 @Component({
   selector: 'app-unmarshal',
@@ -33,7 +32,7 @@ export class UnmarshalComponent implements OnInit {
       this.toaster.pop("error", "导入失败", "格式错误")
       return
     }
-
+    JSON.parse(content)
     const rest = content.split("://")
     if (rest.length != 2) {
       this.toaster.pop("error", "导入失败", "不支持该格式")
@@ -44,14 +43,14 @@ export class UnmarshalComponent implements OnInit {
 
     const uid = this.jwt.decodeToken(this.jwt.tokenGetter()).user_id
     switch (protName.toUpperCase()) {
-      case Vless:
+      case "VLESS":
         const s = this.b64_to_utf8(protContent)
         console.log(s)
         break;
-      case Vmess:
+      case "VMESS":
         const vmess = JSON.parse(this.b64_to_utf8(protContent))
         this.protocol = {
-          Protocol: "vmess",
+          Protocol: protName,
           UID: uid,
           Name: vmess.ps,
           Address: vmess.add,
@@ -75,7 +74,10 @@ export class UnmarshalComponent implements OnInit {
           this.toaster.pop("error", "导入失败")
         })
         break;
-      case Socks:
+      case "SOCKS":
+
+        break;
+      case "SS":
 
         break;
       default:

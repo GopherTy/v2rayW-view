@@ -13,6 +13,7 @@ import { QrcodeComponent, Vmess, Vless } from '../qrcode/qrcode.component';
 import { SocksParam } from '../v2ray/param';
 import { SocksComponent } from '../socks/socks.component';
 import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
+import { ConfigfileComponent } from '../configfile/configfile.component';
 
 @Component({
   selector: 'app-protocol',
@@ -22,6 +23,7 @@ import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
 export class ProtocolComponent implements OnInit {
   power = false // v2ray 启动状态 
   disable: boolean // 按钮状态
+  VLess = false // vless 暂不支持分享，官网在之后会统一定制分享标准。
 
   socksParam: SocksParam = {}
 
@@ -46,6 +48,13 @@ export class ProtocolComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Vless 协议暂不支持分享，官方会统一标准。
+    if (this.data) {
+      if (this.data.Protocol == "vless") {
+        this.VLess = true
+      }
+    }
+
     // 禁用按钮状态
     this.msg.disableSource.subscribe((b) => {
       this.disable = b
@@ -95,6 +104,16 @@ export class ProtocolComponent implements OnInit {
       this.toaster.pop("error", "删除失败")
     }).finally(() => {
       this.disable = false
+    })
+  }
+
+  openConfigFileWindow(v: any) {
+    this.dialog.open(ConfigfileComponent, {
+      width: "45%",
+      data: {
+        "op": "update",
+        "value": v,
+      }
     })
   }
 
@@ -204,132 +223,11 @@ export class ProtocolComponent implements OnInit {
 
   // 复制完整配置文件
   copyAllToClipboard() {
-    let content = {
-      "log": {
-        "access": "",
-        "error": "",
-        "loglevel": "warning"
-      },
-      "api": null,
-      "dns": {},
-      "routing": {},
-      "policy": {},
-      "inbounds": [
-        {
-          "listen": this.socksParam.Address,
-          "port": this.socksParam.Port,
-          "protocol": this.socksParam.Protocol,
-          "settings": {
-            "auth": "noauth"
-          },
-          "sniffing": {
-            "destOverride": [
-              "http",
-              "tls"
-            ],
-            "enabled": true
-          }
-        }
-      ],
-      "outbounds": [
-        {},
-      ],
-      "transport": {},
-      "stats": {},
-      "reverse": {}
+    if (this.data.ConfigFile) {
+      return this.data.ConfigFile
+    } else {
+      return "TODO"
     }
-    if (this.data.Direct) {
-      content.routing = {
-        "domainStrategy": "IPOnDemand",
-        "rules": [
-          {
-            "type": "field",
-            "outboundTag": "direct",
-            "domain": ["geosite:cn"], // 中国大陆主流网站的域名
-          },
-          {
-            "type": "field",
-            "outboundTag": "direct",
-            "ip": ["geoip:cn", "geoip:private"],
-          }
-        ],
-      }
-      content.outbounds.push({
-        "protocol": "freedom",
-        "settings": {},
-        "tag": "direct",
-      })
-    }
-    switch (this.data.Protocol) {
-      case "vmess":
-        content.outbounds[0] = {
-          "mux": {
-            "concurrency": 8,
-            "enabled": false
-          },
-          "protocol": "vmess",
-          "settings": {
-            "vnext": [
-              {
-                "address": this.data.Address,
-                "port": this.data.Port,
-                "users": [
-                  {
-                    "alterId": this.data.AlertID,
-                    "id": this.data.UserID,
-                    "level": this.data.Level,
-                    "security": this.data.Security
-                  }
-                ]
-              }
-            ]
-          },
-          "streamSettings": {
-            "network": this.data.Network,
-            "security": this.data.NetSecurity,
-            "wsSettings": {
-              "path": this.data.Path
-            }
-          }
-        }
-        break;
-      case "vless":
-        content.outbounds[0] = {
-          "mux": {
-            "concurrency": 8,
-            "enabled": false
-          },
-          "protocol": "vless",
-          "settings": {
-            "vnext": [
-              {
-                "address": this.data.Address,
-                "port": this.data.Port,
-                "users": [
-                  {
-                    "id": this.data.UserID,
-                    "flow": this.data.Flow,
-                    "encryption": this.data.Encryption,
-                    "level": this.data.Level,
-                  }
-                ]
-              }
-            ]
-          },
-          "streamSettings": {
-            "network": this.data.Network,
-            "security": this.data.NetSecurity,
-            "wsSettings": {
-              "path": this.data.Path
-            }
-          }
-        }
-        break;
-      default:
-        break;
-    }
-
-    return JSON.stringify(content)
   }
 
   // 控制 v2ray 的开启和关闭

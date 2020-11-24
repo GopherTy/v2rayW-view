@@ -37,15 +37,25 @@
                         <mat-icon>public </mat-icon>
                         <span>剪贴板导入</span>
                     </button>
+                    <button mat-menu-item (click)="openLoadConfigFileWindow()">
+                        <mat-icon>public </mat-icon>
+                        <span>完整配置导入</span>
+                    </button>
                 </mat-menu>
                 <!-- 订阅管理 -->
-                <button style="margin-left: 30px;" mat-raised-button color="primary" (click)="subscribe()">
+                <button style="margin-left: 30px;" [disabled]="disable" mat-raised-button color="primary"
+                    (click)="subscribe()">
                     <mat-icon>subscriptions</mat-icon>
                     <span>订阅服务</span>
                 </button>
-                <button style="margin-left: 30px;" mat-raised-button color="primary" (click)="clearProtocol()">
-                    <mat-icon>clear_all</mat-icon>
-                    <span>清空列表</span>
+                <button style="margin-left: 30px;" [disabled]="disable" mat-raised-button color="primary"
+                    (click)="clearProtocol()">
+                    <mat-icon>delete</mat-icon>
+                    <span>清空服务</span>
+                </button>
+                <button style="margin-left: 30px;" mat-raised-button color="primary" (click)="clearLog()">
+                    <mat-icon>delete_sweep</mat-icon>
+                    <span>清空日志</span>
                 </button>
             </mat-card-subtitle>
 
@@ -164,7 +174,7 @@
                     <h3> <b>简介</b></h3>
                     <p>
                         本项目为 ProjectV(迁移至 V2fly) 项目中 v2ray-core 的 web 客户端。通过网页端配置代理协议进行科学上网。
-                        目前支持 vmess,vless 协议，其他协议和更多功能将之后进行迭代开发。
+                        目前支持 vmess,vless,socks,shadowsocks 协议，其他协议和更多功能将之后进行迭代开发。
                     </p>
                 </div>
                 <div>
@@ -186,7 +196,7 @@
                     <p>
                         当前 v2rayW 版本为 v1.5.0 版本更新详情说明见
                         <a href="https://github.com/GopherTy/v2rayW/releases">release</a>。
-                        v2ray-core 版本为 v4.32.1
+                        v2ray-core 版本为 v4.33.0
                     </p>
                     <p>
                         若在使用过程中发现任何 bug ，或需要 v2rayW 支持的功能欢迎你向

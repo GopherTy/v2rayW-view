@@ -17,11 +17,11 @@
             </button>
         </span>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openSubconfigWindow(data)">
+            <button [disabled]="disable" mat-menu-item (click)="openSubconfigWindow(data)">
                 <mat-icon>settings</mat-icon>
                 <span>修改</span>
             </button>
-            <button mat-menu-item (click)="remove(data)">
+            <button [disabled]="disable" mat-menu-item (click)="remove(data)">
                 <mat-icon>delete</mat-icon>
                 <span>删除</span>
             </button>

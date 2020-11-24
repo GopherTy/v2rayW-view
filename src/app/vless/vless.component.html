@@ -4,42 +4,42 @@
 <mat-dialog-content>
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>别名</mat-label>
-        <input matInput type="text" [(ngModel)]="params.Name">
+        <input [disabled]="disable" matInput type="text" [(ngModel)]="params.Name">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>地址</mat-label>
-        <input matInput type="text" [(ngModel)]="params.Address">
+        <input [disabled]="disable" matInput type="text" [(ngModel)]="params.Address">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>端口</mat-label>
-        <input matInput type="number" [(ngModel)]="params.Port">
+        <input [disabled]="disable" matInput type="number" [(ngModel)]="params.Port">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>用户ID</mat-label>
-        <input matInput type="text" [(ngModel)]="params.UserID">
+        <input [disabled]="disable" matInput type="text" [(ngModel)]="params.UserID">
     </mat-form-field>
 
-    <mat-form-field class="full-width" appearance="outline">
+    <!-- <mat-form-field class="full-width" appearance="outline">
         <mat-label>flow</mat-label>
-        <input matInput type="text" [(ngModel)]="params.Flow">
-    </mat-form-field>
+        <input  [disabled]="disable" matInput type="text" [(ngModel)]="params.Flow">
+    </mat-form-field> -->
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>加密(encryption)</mat-label>
-        <input matInput type="text" [(ngModel)]="params.Encryption">
+        <input [disabled]="disable" matInput type="text" [(ngModel)]="params.Encryption">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>用户等级</mat-label>
-        <input matInput type="number" [(ngModel)]="params.Level">
+        <input [disabled]="disable" matInput type="number" [(ngModel)]="params.Level">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>传输协议</mat-label>
-        <mat-select [(value)]="params.Network" (selectionChange)="network($event)">
+        <mat-select [disabled]="disable" [(value)]="params.Network" (selectionChange)="network($event)">
             <mat-option value="tcp">tcp</mat-option>
             <mat-option value="kcp">kcp</mat-option>
             <mat-option value="ws">ws</mat-option>
@@ -50,27 +50,28 @@
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>域名</mat-label>
-        <textarea matInput [(ngModel)]="params.Domains"></textarea>
+        <textarea [disabled]="disable" matInput [(ngModel)]="params.Domains"></textarea>
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>路径</mat-label>
-        <input matInput type="text" [(ngModel)]="params.Path">
+        <input [disabled]="disable" matInput type="text" [(ngModel)]="params.Path">
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>底层传输安全</mat-label>
-        <mat-select [(value)]="params.NetSecurity" (selectionChange)="netSecurity($event)">
+        <mat-select [disabled]="disable" [(value)]="params.NetSecurity" (selectionChange)="netSecurity($event)">
             <mat-option value="none">none</mat-option>
             <mat-option value="tls">tls</mat-option>
             <mat-option value="xtls">xtls</mat-option>
         </mat-select>
     </mat-form-field>
 
-    <mat-slide-toggle (change)="direct($event)" [checked]="params.Direct" color="primary">国内直连</mat-slide-toggle>
+    <mat-slide-toggle [disabled]="disable" (change)="direct($event)" [checked]="params.Direct" color="primary">国内直连
+    </mat-slide-toggle>
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <button [disabled]="disable" mat-raised-button color="primary" (click)=" on? update(): save()">保存</button>
-    <button mat-raised-button color="primary" matDialogClose>关闭</button>
+    <button [disabled]="disable" mat-raised-button color="primary" matDialogClose>关闭</button>
 </mat-dialog-actions>

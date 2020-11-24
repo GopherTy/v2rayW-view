@@ -20,6 +20,11 @@ export interface Params {
     User?: string
     Passwd?: string
 
+    // 此字段用于区分是配置文件修改，还是输入框修改
+    Custom?: boolean
+    // 全部配置
+    ConfigFile?: string
+
     Direct?: boolean
 }
 
