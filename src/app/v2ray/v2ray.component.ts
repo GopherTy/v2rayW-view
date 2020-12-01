@@ -482,6 +482,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   // 订阅服务
   subscribe() {
+    if (this.subscribes.length === 0) {
+      return
+    }
+
     this.disable = true
     this.subscribes.forEach((param) => {
       this.subSerivce.subscribe<any>(param).then((v) => {

@@ -214,6 +214,7 @@ export class ProtocolComponent implements OnInit {
           this.data.Address + ":" + this.data.Port
         content = "ss://" + btoa(ss) +
           "#" + encodeURI(this.data.Name)
+        break;
       default:
         content = 'TODO'
         break;

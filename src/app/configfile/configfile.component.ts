@@ -4,7 +4,6 @@ import { MsgService } from '../service/msg/msg.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToasterService } from 'angular2-toaster';
 import { Params } from '../v2ray/param';
-import { isNumber } from 'util';
 import { ProtocolService } from '../service/protocol/protocol.service';
 
 @Component({
@@ -38,8 +37,8 @@ export class ConfigfileComponent implements OnInit {
     const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
       UID: userInfo.user_id,
+      Custom: true,
     }
-
 
     // 修改
     if (this.data.op === 'update') {
@@ -61,7 +60,6 @@ export class ConfigfileComponent implements OnInit {
         this.params.Path = this.data.value.Path,
         this.params.NetSecurity = this.data.value.NetSecurity,
         this.params.Direct = this.data.value.Direct,
-        this.params.Custom = true,
         this.initConfig = this.data.value.ConfigFile
       this.params.ConfigFile = this.data.value.ConfigFile
       this.on = true
@@ -79,11 +77,11 @@ export class ConfigfileComponent implements OnInit {
     try {
       const cnf = JSON.parse(this.params.ConfigFile)
       const initCnf = JSON.parse(this.initConfig)
-      if (isNumber(cnf)) {
+      if (typeof cnf === 'number') {
         this.toaster.pop("error", "JSON格式不正确")
         return
       }
-      // 除了日志和入口配置，其他符合本应用的定位的配置允许使用配置文件修改。
+      // 除了日志，其他符合本应用的定位的配置允许使用配置文件修改。
       initCnf["api"] = cnf["api"]
       initCnf["dns"] = cnf["dns"]
       initCnf["routing"] = cnf["routing"]
@@ -91,6 +89,7 @@ export class ConfigfileComponent implements OnInit {
       initCnf["transport"] = cnf["transport"]
       initCnf["stats"] = cnf["stats"]
       initCnf["reverse"] = cnf["reverse"]
+      initCnf["inbounds"] = cnf["inbounds"]
 
       const outbound = cnf["outbounds"][0]
       const vp = outbound["settings"]["vnext"]
@@ -110,22 +109,23 @@ export class ConfigfileComponent implements OnInit {
         this.params.Security = user["security"]
         this.params.Encryption = user["encryption"]
 
+        if (outbound["streamSettings"]) {
+          const streamSettings = outbound["streamSettings"]
+          this.params.Network = streamSettings["network"]
+          this.params.NetSecurity = streamSettings["security"]
 
-        const streamSettings = outbound["streamSettings"]
-        this.params.Network = streamSettings["network"]
-        this.params.NetSecurity = streamSettings["security"]
-
-        if (streamSettings["wsSettings"]) {
-          this.params.Path = streamSettings["wsSettings"]["path"]
-          if (streamSettings["wsSettings"]["headers"]) {
-            this.params.Domains = streamSettings["wsSettings"]["headers"]["Host"]
+          if (streamSettings["wsSettings"]) {
+            this.params.Path = streamSettings["wsSettings"]["path"]
+            if (streamSettings["wsSettings"]["headers"]) {
+              this.params.Domains = streamSettings["wsSettings"]["headers"]["Host"]
+            }
           }
-        }
 
-        if (streamSettings["httpSettings"]) {
-          this.params.Path = streamSettings["httpSettings"]["path"]
-          if (streamSettings["httpSettings"]["host"]) {
-            this.params.Domains = streamSettings["httpSettings"]["host"]
+          if (streamSettings["httpSettings"]) {
+            this.params.Path = streamSettings["httpSettings"]["path"]
+            if (streamSettings["httpSettings"]["host"]) {
+              this.params.Domains = streamSettings["httpSettings"]["host"]
+            }
           }
         }
       }
@@ -150,6 +150,7 @@ export class ConfigfileComponent implements OnInit {
         }
       }
 
+      this.disable = true
       this.params.ConfigFile = JSON.stringify(initCnf, null, 4)
       this.protocol.update(this.params).then(() => {
         this.msg.updateProtocol(this.params)
@@ -170,11 +171,11 @@ export class ConfigfileComponent implements OnInit {
   load() {
     try {
       const cnf = JSON.parse(this.params.ConfigFile)
-      if (isNumber(cnf)) {
+      if (typeof cnf === 'number') {
         this.toaster.pop("error", "JSON格式不正确")
         return
       }
-      // 除了日志和入口配置，其他符合本应用的定位的配置允许使用配置文件修改。
+      // 除了日志，其他符合本应用的定位的配置允许使用配置文件修改。
 
       const outbound = cnf["outbounds"][0]
       if (outbound["protocol"]) {
@@ -238,8 +239,8 @@ export class ConfigfileComponent implements OnInit {
         }
       }
 
+      this.params.ConfigFile = JSON.stringify(cnf, null, 4)
       this.disable = true
-
       this.protocol.save<any>(this.params).then((value) => {
         // 通知主界面将新增的协议增加到列表里。
         this.params.ID = value.data.id

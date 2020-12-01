@@ -111,8 +111,7 @@
         </mat-card>
     </mat-tab>
 
-    <mat-tab>
-        <!-- 头部 -->
+    <!-- <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="icon" fontSet="fontawesome-far" fontIcon="fa-clipboard"></mat-icon>
             参数设置
@@ -141,20 +140,20 @@
                     </mat-form-field>
                 </div>
 
-                <!-- <div>
+                <div>
                     <h3>路由设置</h3>
                     <mat-form-field class="full-width" appearance="outline">
                         <mat-label>本地端口监听</mat-label>
                         <input matInput type="number" [(ngModel)]="params.Port">
                     </mat-form-field>
-                </div> -->
+                </div>
             </mat-card-content>
 
             <mat-card-actions>
                 <button [disabled]="disable" mat-raised-button color="primary" (click)="settings()">保存</button>
             </mat-card-actions>
         </mat-card>
-    </mat-tab>
+    </mat-tab> -->
 
     <mat-tab>
         <!-- 头部 -->
@@ -182,11 +181,8 @@
                         <b>使用</b>
                     </h3>
                     <p>
-                        Step1: 设置浏览器的代理协议，默认代理协议为 socks5 暂不支持修改。
-                        默认代理端口为 1080 ，可以通过高级设置进行修改！
-                    </p>
-                    <p>
-                        Step2: 在服务管理里配置好正确的代理协议，点击启动按钮。
+                        在服务管理里选择合适的方式，配置好正确的代理协议，点击启动按钮。本地默认代理端口为 1080，协议为 socks。
+                        可以查看对应协议的配置文件，进行修改。
                     </p>
                 </div>
                 <div>

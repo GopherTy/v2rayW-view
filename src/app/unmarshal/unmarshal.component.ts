@@ -32,7 +32,7 @@ export class UnmarshalComponent implements OnInit {
       this.toaster.pop("error", "导入失败", "格式错误")
       return
     }
-    JSON.parse(content)
+
     const rest = content.split("://")
     if (rest.length != 2) {
       this.toaster.pop("error", "导入失败", "不支持该格式")
@@ -40,50 +40,87 @@ export class UnmarshalComponent implements OnInit {
     }
     const protName = rest[0]
     const protContent = rest[1]
+    const ss = protContent.split("#")
+    let data, ps, userCnf, serverCnf
+    if (ss.length == 2) {
+      ps = decodeURI(ss[1])
+      data = this.b64_to_utf8(ss[0])
+      const cnf = data.split("@")
+      if (cnf.length != 2) {
+        this.toaster.pop("error", "导入失败", "不支持该格式")
+        return
+      }
+      userCnf = cnf[0].split(":")
+      serverCnf = cnf[1].split(":")
+      if (userCnf.length != 2 || serverCnf.length != 2) {
+        this.toaster.pop("error", "导入失败", "不支持该格式")
+        return
+      }
+    } else {
+      data = JSON.parse(this.b64_to_utf8(protContent))
+    }
 
     const uid = this.jwt.decodeToken(this.jwt.tokenGetter()).user_id
     switch (protName.toUpperCase()) {
       case "VLESS":
-        const s = this.b64_to_utf8(protContent)
-        console.log(s)
+        this.toaster.pop("error", "导入失败", "不支持该格式")
         break;
       case "VMESS":
-        const vmess = JSON.parse(this.b64_to_utf8(protContent))
         this.protocol = {
           Protocol: protName,
           UID: uid,
-          Name: vmess.ps,
-          Address: vmess.add,
-          AlertID: vmess.aid,
-          Domains: vmess.host,
-          Level: vmess.v,
-          NetSecurity: vmess.tls,
-          Network: vmess.net,
-          Path: vmess.path,
-          Port: vmess.port,
-          Security: vmess.type,
-          UserID: vmess.id,
+          Name: data.ps,
+          Address: data.add,
+          AlertID: data.aid,
+          Domains: data.host,
+          Level: data.v,
+          NetSecurity: data.tls,
+          Network: data.net,
+          Path: data.path,
+          Port: data.port,
+          Security: data.type,
+          UserID: data.id,
           Direct: false
         }
-        this.protService.save<any>(this.protocol).then((v) => {
-          this.protocol.ID = v.data.id
-          this.msg.addProtocol(this.protocol)
-          this.toaster.pop("success", "导入成功")
-        }).catch((e) => {
-          console.log(e)
-          this.toaster.pop("error", "导入失败")
-        })
         break;
       case "SOCKS":
-
+        this.protocol = {
+          Protocol: protName,
+          UID: uid,
+          Direct: false,
+          Name: ps,
+          Address: serverCnf[0],
+          Port: +serverCnf[1],
+          User: userCnf[0],
+          Passwd: userCnf[1],
+        }
         break;
       case "SS":
-
+        this.protocol = {
+          Protocol: "shadowsocks",
+          UID: uid,
+          Direct: false,
+          Name: ps,
+          Address: serverCnf[0],
+          Port: +serverCnf[1],
+          Security: userCnf[0],
+          Passwd: userCnf[1],
+        }
         break;
       default:
         this.toaster.pop("warning", "导入失败", "暂不支持该协议")
         return;
     }
+
+    this.protService.save<any>(this.protocol).then((v) => {
+      this.protocol.ID = v.data.id
+      this.protocol.ConfigFile = v.data.cnf
+      this.msg.addProtocol(this.protocol)
+      this.toaster.pop("success", "导入成功")
+    }).catch((e) => {
+      console.log(e)
+      this.toaster.pop("error", "导入失败")
+    })
 
     this.dialogRef.close()
   }

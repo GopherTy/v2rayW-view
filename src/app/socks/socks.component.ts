@@ -92,4 +92,8 @@ export class SocksComponent implements OnInit {
       this.disable = false
     })
   }
+  // 国内直连
+  direct(evt) {
+    this.params.Direct = evt.checked
+  }
 }
