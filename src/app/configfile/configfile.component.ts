@@ -18,7 +18,7 @@ export class ConfigfileComponent implements OnInit {
   params: Params
 
   // 当前协议的初始化配置文件
-  initConfig = ''
+  v2rayCnf = ''
 
   // 控制增加或者修改的开关，默认增加。
   on: boolean
@@ -43,25 +43,10 @@ export class ConfigfileComponent implements OnInit {
     // 修改
     if (this.data.op === 'update') {
       this.params.Protocol = this.data.value.Protocol,
-
-        this.params.ID = this.data.value.ID,
+        this.params.UID = this.data.value.UID
+      this.params.ID = this.data.value.ID,
         this.params.Name = this.data.value.Name,
-        this.params.Address = this.data.value.Address,
-        this.params.Port = this.data.value.Port,
-        this.params.UserID = this.data.value.UserID,
-        this.params.AlertID = this.data.value.AlertID,
-        this.params.Encryption = this.data.value.Encryption,
-        this.params.User = this.data.value.User,
-        this.params.Passwd = this.data.value.Passwd,
-        this.params.Level = this.data.value.Level,
-        this.params.Security = this.data.value.Security,
-        this.params.Network = this.data.value.Network,
-        this.params.Domains = this.data.value.Domains,
-        this.params.Path = this.data.value.Path,
-        this.params.NetSecurity = this.data.value.NetSecurity,
-        this.params.Direct = this.data.value.Direct,
-        this.initConfig = this.data.value.ConfigFile
-      this.params.ConfigFile = this.data.value.ConfigFile
+        this.v2rayCnf = this.data.value.ConfigFile
       this.on = true
     }
 
@@ -75,8 +60,8 @@ export class ConfigfileComponent implements OnInit {
     // 支持配置文件修改。
     // 解析配置文件进行输入框对应的参数做修改
     try {
-      const cnf = JSON.parse(this.params.ConfigFile)
-      const initCnf = JSON.parse(this.initConfig)
+      const cnf = JSON.parse(this.v2rayCnf)
+      const initCnf = JSON.parse(this.v2rayCnf)
       if (typeof cnf === 'number') {
         this.toaster.pop("error", "JSON格式不正确")
         return
@@ -92,25 +77,34 @@ export class ConfigfileComponent implements OnInit {
       initCnf["inbounds"] = cnf["inbounds"]
 
       const outbound = cnf["outbounds"][0]
+      if (!outbound) {
+        this.toaster.pop("error", "导入失败", "配置文件不正确")
+        return
+      }
+
       const vp = outbound["settings"]["vnext"]
       const sp = outbound["settings"]["servers"]
+      if (!vp && !sp) {
+        this.toaster.pop("error", "导入失败", "配置文件不正确")
+        return
+      }
+
       // vmess，vless 协议参数
       if (vp) {
-        initCnf["outbounds"][0]["settings"]["vnext"][0] = vp[0]
-        initCnf["outbounds"][0]["streamSettings"] = outbound["streamSettings"]
-
         this.params.Address = vp[0]["address"]
         this.params.Port = vp[0]["port"]
 
         const user = vp[0]["users"][0]
-        this.params.UserID = user["id"]
-        this.params.AlertID = user["alterId"]
-        this.params.Level = user["level"]
-        this.params.Security = user["security"]
-        this.params.Encryption = user["encryption"]
+        if (user) {
+          this.params.UserID = user["id"]
+          this.params.AlertID = user["alterId"]
+          this.params.Level = user["level"]
+          this.params.Security = user["security"]
+          this.params.Encryption = user["encryption"]
+        }
 
-        if (outbound["streamSettings"]) {
-          const streamSettings = outbound["streamSettings"]
+        const streamSettings = outbound["streamSettings"]
+        if (streamSettings) {
           this.params.Network = streamSettings["network"]
           this.params.NetSecurity = streamSettings["security"]
 
@@ -123,23 +117,21 @@ export class ConfigfileComponent implements OnInit {
 
           if (streamSettings["httpSettings"]) {
             this.params.Path = streamSettings["httpSettings"]["path"]
-            if (streamSettings["httpSettings"]["host"]) {
-              this.params.Domains = streamSettings["httpSettings"]["host"]
-            }
+            this.params.Domains = streamSettings["httpSettings"]["host"]
           }
         }
       }
       // socks，ss 协议参数
       if (sp) {
-        initCnf["outbounds"][0]["settings"]["servers"][0] = sp[0]
-        initCnf["outbounds"][0]["streamSettings"] = outbound["streamSettings"]
-
         this.params.Address = sp[0]["address"]
         this.params.Port = sp[0]["port"]
-        if (sp[0]["users"][0]) {
+
+        if (sp[0]["users"]) {
           const user = sp[0]["users"][0]
-          this.params.User = user["user"]
-          this.params.Passwd = user["pass"]
+          if (user) {
+            this.params.User = user["user"]
+            this.params.Passwd = user["pass"]
+          }
         }
 
         if (sp[0]["method"]) {
@@ -149,6 +141,7 @@ export class ConfigfileComponent implements OnInit {
           this.params.Passwd = sp[0]["password"]
         }
       }
+      initCnf["outbounds"] = cnf["outbounds"]
 
       this.disable = true
       this.params.ConfigFile = JSON.stringify(initCnf, null, 4)
@@ -170,65 +163,79 @@ export class ConfigfileComponent implements OnInit {
   // 加载
   load() {
     try {
-      const cnf = JSON.parse(this.params.ConfigFile)
+      const cnf = JSON.parse(this.v2rayCnf)
       if (typeof cnf === 'number') {
         this.toaster.pop("error", "JSON格式不正确")
         return
       }
+
       // 除了日志，其他符合本应用的定位的配置允许使用配置文件修改。
+      if (cnf["log"]) {
+        cnf["log"] = {
+          "access": "",
+          "error": "",
+          "loglevel": "warning",
+        }
+      }
 
       const outbound = cnf["outbounds"][0]
-      if (outbound["protocol"]) {
-        this.params.Protocol = outbound["protocol"]
+      if (!outbound) {
+        this.toaster.pop("error", "导入失败", "配置文件不正确")
+        return
       }
+      // 设置协议
+      this.params.Protocol = outbound["protocol"]
+
       const vp = outbound["settings"]["vnext"]
       const sp = outbound["settings"]["servers"]
+      if (!vp && !sp) {
+        this.toaster.pop("error", "导入失败", "配置文件不正确")
+        return
+      }
+
       // vmess，vless 协议参数
       if (vp) {
-        cnf["outbounds"][0]["settings"]["vnext"][0] = vp[0]
-        if (outbound["streamSettings"]) {
-          cnf["outbounds"][0]["streamSettings"] = outbound["streamSettings"]
-        }
-
         this.params.Address = vp[0]["address"]
         this.params.Port = vp[0]["port"]
 
         const user = vp[0]["users"][0]
-        this.params.UserID = user["id"]
-        this.params.AlertID = user["alterId"]
-        this.params.Level = user["level"]
-        this.params.Security = user["security"]
-        this.params.Encryption = user["encryption"]
+        if (user) {
+          this.params.UserID = user["id"]
+          this.params.AlertID = user["alterId"]
+          this.params.Level = user["level"]
+          this.params.Security = user["security"]
+          this.params.Encryption = user["encryption"]
+        }
 
-        if (outbound["streamSettings"]) {
-          const streamSettings = outbound["streamSettings"]
+        const streamSettings = outbound["streamSettings"]
+        if (streamSettings) {
           this.params.Network = streamSettings["network"]
           this.params.NetSecurity = streamSettings["security"]
 
-          this.params.Path = streamSettings["wsSettings"]["path"]
-          if (streamSettings["wsSettings"]["headers"]) {
-            this.params.Domains = streamSettings["wsSettings"]["headers"]["Host"]
+          if (streamSettings["wsSettings"]) {
+            this.params.Path = streamSettings["wsSettings"]["path"]
+            if (streamSettings["wsSettings"]["headers"]) {
+              this.params.Domains = streamSettings["wsSettings"]["headers"]["Host"]
+            }
           }
 
           if (streamSettings["httpSettings"]) {
             this.params.Path = streamSettings["httpSettings"]["path"]
-            if (streamSettings["httpSettings"]["host"]) {
-              this.params.Domains = streamSettings["httpSettings"]["host"]
-            }
+            this.params.Domains = streamSettings["httpSettings"]["host"]
           }
         }
       }
       // socks，ss 协议参数
       if (sp) {
-        cnf["outbounds"][0]["settings"]["servers"][0] = sp[0]
-        cnf["outbounds"][0]["streamSettings"] = outbound["streamSettings"]
-
         this.params.Address = sp[0]["address"]
         this.params.Port = sp[0]["port"]
-        if (sp[0]["users"][0]) {
+
+        if (sp[0]["users"]) {
           const user = sp[0]["users"][0]
-          this.params.User = user["user"]
-          this.params.Passwd = user["pass"]
+          if (user) {
+            this.params.User = user["user"]
+            this.params.Passwd = user["pass"]
+          }
         }
 
         if (sp[0]["method"]) {

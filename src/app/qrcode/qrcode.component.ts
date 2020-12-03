@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
-import { URL } from 'url';
 
 @Component({
   selector: 'app-qrcode',
@@ -72,12 +71,12 @@ export class QrcodeComponent implements OnInit {
 
 // 主流 vmess 协议的格式
 export interface Vmess {
-  v?: string
+  v?: number
   ps?: string
   add?: string
-  port?: string
+  port?: number
   id?: string
-  aid?: string
+  aid?: number
   net?: string
   type?: string
   host?: string

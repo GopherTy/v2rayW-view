@@ -19,6 +19,7 @@ import { SocksComponent } from '../socks/socks.component';
 import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
 import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
 import { ConfigfileComponent } from '../configfile/configfile.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-v2ray',
@@ -44,6 +45,10 @@ export class V2rayComponent implements OnInit, OnDestroy {
   wsStatus: WebSocket
   // logs 
   wsLogs: WebSocket
+
+
+  // 运行状态不允许清空协议
+  lock = false
 
   // 协议内容
   _vmessProt: Map<number, any> = new Map<number, any>();
@@ -78,25 +83,25 @@ export class V2rayComponent implements OnInit, OnDestroy {
     this.subscribeParam = {}
 
     // 获取 v2ray 参数配置
-    this.v2ray.listSettings<any>().then((v) => {
-      const settings = v.data.settings
-      if (!settings) {
-        this.socksParam = {
-          Protocol: "socks",
-          Port: 1080,
-          Address: "127.0.0.1",
-        }
-        return
-      }
+    // this.v2ray.listSettings<any>().then((v) => {
+    //   const settings = v.data.settings
+    //   if (!settings) {
+    //     this.socksParam = {
+    //       Protocol: "socks",
+    //       Port: 1080,
+    //       Address: "127.0.0.1",
+    //     }
+    //     return
+    //   }
 
-      this.socksParam.Address = settings.address
-      this.socksParam.Port = settings.port
-      this.socksParam.Protocol = settings.protocol
+    //   this.socksParam.Address = settings.address
+    //   this.socksParam.Port = settings.port
+    //   this.socksParam.Protocol = settings.protocol
 
-      this.msg.localSetting(this.socksParam)
-    }).catch((e) => {
-      this.toaster.pop("error", "获取参数配置失败", e.error)
-    })
+    //   this.msg.localSetting(this.socksParam)
+    // }).catch((e) => {
+    //   this.toaster.pop("error", "获取参数配置失败", e.error)
+    // })
 
     // 订阅协议，增加到视图上。
     this.msg.protocolSource.subscribe((protocol) => {
@@ -158,6 +163,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
       if (!data) {
         return
       }
+
       this.subscribes.push(data)
       this._subscribeMap.set(data.ID, data)
     }, (err) => {
@@ -229,6 +235,7 @@ export class V2rayComponent implements OnInit, OnDestroy {
         if (v.data.content) {
           v.data.content.forEach((data) => {
             this.subscribes.push(data)
+            this._subscribeMap.set(data.ID, data)
           })
         }
       }).catch((e) => {
@@ -237,11 +244,17 @@ export class V2rayComponent implements OnInit, OnDestroy {
       })
 
 
-    // 登录成功后开启 ws 协议，用于开启日志
+    // 登录成功后开启 ws 协议，获取 v2ray 状态
     const statusAddr = getWebSocketAddr(Status)
     this.wsStatus = new WebSocket(statusAddr, [localStorage.getItem("access_token")])
     this.wsStatus.onmessage = (v) => {
       this.msg.v2rayStatus(v.data)
+      const status = JSON.parse(v.data)
+      if (status.running) {
+        this.lock = true
+      } else {
+        this.lock = false
+      }
     }
     this.wsStatus.onerror = (v) => {
       console.log(v)
@@ -460,25 +473,25 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
 
   // 参数设置
-  settings() {
-    if (Object.keys(this.socksParam).length === 0) {
-      return
-    }
-    this.disable = true
+  // settings() {
+  //   if (Object.keys(this.socksParam).length === 0) {
+  //     return
+  //   }
+  //   this.disable = true
 
-    this.v2ray.settings<BackEndData>(this.socksParam).then((res) => {
-      this.toaster.pop("success", "保存成功", res.data.msg)
-    }).catch((e: HttpErrorResponse) => {
-      // 不是刷新 token 的错误，弹出错误内容。
-      if (e.status == 403) {
-        this.toaster.pop("warning", "长时间未操作请重新登录")
-      } else {
-        this.toaster.pop("error", "保存失败", e.error.error)
-      }
-    }).finally(() => {
-      this.disable = false
-    })
-  }
+  //   this.v2ray.settings<BackEndData>(this.socksParam).then((res) => {
+  //     this.toaster.pop("success", "保存成功", res.data.msg)
+  //   }).catch((e: HttpErrorResponse) => {
+  //     // 不是刷新 token 的错误，弹出错误内容。
+  //     if (e.status == 403) {
+  //       this.toaster.pop("warning", "长时间未操作请重新登录")
+  //     } else {
+  //       this.toaster.pop("error", "保存失败", e.error.error)
+  //     }
+  //   }).finally(() => {
+  //     this.disable = false
+  //   })
+  // }
 
   // 订阅服务
   subscribe() {
@@ -538,6 +551,11 @@ export class V2rayComponent implements OnInit, OnDestroy {
 
   //清空服务列表
   clearProtocol() {
+    if (this.lock) {
+      this.toaster.pop("warning", "服务运行中", "不允许清空协议")
+      return
+    }
+
     this.disable = true
 
     const userInfo = this.helper.decodeToken(this.helper.tokenGetter())
