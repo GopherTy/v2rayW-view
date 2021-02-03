@@ -19,7 +19,6 @@ import { SocksComponent } from '../socks/socks.component';
 import { Vmess, Vless, Socks, Shadowsocks } from '../service/protocol/api';
 import { ShadowsocksComponent } from '../shadowsocks/shadowsocks.component';
 import { ConfigfileComponent } from '../configfile/configfile.component';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-v2ray',
