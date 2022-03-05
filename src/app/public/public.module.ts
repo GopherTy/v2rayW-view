@@ -23,35 +23,31 @@ import { PasswdComponent } from './passwd/passwd.component';
 
 
 @NgModule({
-  declarations: [
-    ToolbarComponent,
-    LoginComponent,
-    JoinComponent,
-    PageNotFoundComponent,
-    PasswdComponent,
-  ],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    RouterModule,
-
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatDialogModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-    MatMenuModule,
-  ],
-  exports: [
-    ToolbarComponent,
-    LoginComponent,
-  ],
-  entryComponents: [
-    LoginComponent,
-  ],
+    declarations: [
+        ToolbarComponent,
+        LoginComponent,
+        JoinComponent,
+        PageNotFoundComponent,
+        PasswdComponent,
+    ],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        RouterModule,
+        MatIconModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        MatMenuModule,
+    ],
+    exports: [
+        ToolbarComponent,
+        LoginComponent,
+    ]
 })
 export class PublicModule { }
