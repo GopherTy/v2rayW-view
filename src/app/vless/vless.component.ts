@@ -3,7 +3,6 @@ import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MsgService } from '../service/msg/msg.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { Vless } from '../service/protocol/api';
 import { ToasterService } from 'angular2-toaster';
 
@@ -26,16 +25,12 @@ export class VlessComponent implements OnInit {
     private toaster: ToasterService,
     private dialogRef: MatDialogRef<VlessComponent>,
     private msg: MsgService,
-    private jwt: JwtHelperService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    // 获取用户信息
-    const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
       Protocol: Vless, // vless 协议
-      UID: userInfo.user_id, // 用户 id
 
       NetSecurity: "none",// 默认为none
       Flow: "",//默认为空

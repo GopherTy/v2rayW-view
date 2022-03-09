@@ -2,7 +2,6 @@ export interface Params {
     ID?: number
     Name?: string
     Protocol?: string
-    UID?: number
     Address?: string
     Port?: number
     UserID?: string
@@ -38,7 +37,6 @@ export interface SocksParam {
 // 订阅参数
 export interface SubscribeParam {
     ID?: number
-    UID?: number
     Name?: string
     URL?: string
 }

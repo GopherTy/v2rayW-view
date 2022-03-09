@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { MsgService } from '../service/msg/msg.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToasterService } from 'angular2-toaster';
@@ -28,22 +27,17 @@ export class ConfigfileComponent implements OnInit {
     private toaster: ToasterService,
     private dialogRef: MatDialogRef<ConfigfileComponent>,
     private msg: MsgService,
-    private jwt: JwtHelperService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    // 获取用户信息
-    const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
-      UID: userInfo.user_id,
       Custom: true,
     }
 
     // 修改
     if (this.data.op === 'update') {
       this.params.Protocol = this.data.value.Protocol,
-        this.params.UID = this.data.value.UID
       this.params.ID = this.data.value.ID,
         this.params.Name = this.data.value.Name,
         this.v2rayCnf = this.data.value.ConfigFile

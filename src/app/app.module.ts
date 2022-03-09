@@ -8,10 +8,7 @@ import { PublicModule } from './public/public.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ToasterModule } from 'angular2-toaster';
-import { JwtModule } from '@auth0/angular-jwt';
-import { httpInterceptorProviders } from './interceptor/barrel';
 import { V2rayComponent } from './v2ray/v2ray.component';
-import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -49,7 +46,6 @@ import { ConfigfileComponent } from './configfile/configfile.component';
   declarations: [
     AppComponent,
     V2rayComponent,
-    HomeComponent,
     ProtocolComponent,
     VmessComponent,
     VlessComponent,
@@ -89,17 +85,8 @@ import { ConfigfileComponent } from './configfile/configfile.component';
     QRCodeModule,
     ClipboardModule,
     ToasterModule.forRoot(),
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: function tokenGetter() {
-          return localStorage.getItem('access_token');
-        },
-      }
-    })
   ],
-  providers: [
-    httpInterceptorProviders,
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { ProtocolService } from '../service/protocol/protocol.service';
 import { ToasterService } from 'angular2-toaster';
 import { MsgService } from '../service/msg/msg.service';
 import { SubscribeParam } from '../v2ray/param';
@@ -26,16 +24,12 @@ export class SubconfigComponent implements OnInit {
     private toaster: ToasterService,
     private dialogRef: MatDialogRef<SubconfigComponent>,
     private msg: MsgService,
-    private jwt: JwtHelperService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
     // 获取用户信息
-    const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
-    this.params = {
-      UID: userInfo.user_id, // 用户 id 
-    }
+    this.params = {}
 
     // 修改
     if (this.data.op === 'update') {

@@ -4,7 +4,6 @@ import { ToasterService } from 'angular2-toaster';
 import { MsgService } from '../service/msg/msg.service';
 import { Params } from '../v2ray/param';
 import { ProtocolService } from '../service/protocol/protocol.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-unmarshal',
@@ -17,7 +16,6 @@ export class UnmarshalComponent implements OnInit {
   constructor(
     private toaster: ToasterService,
     private msg: MsgService,
-    private jwt: JwtHelperService,
     private protService: ProtocolService,
     private dialogRef: MatDialogRef<UnmarshalComponent>,
   ) { }
@@ -60,7 +58,6 @@ export class UnmarshalComponent implements OnInit {
       data = JSON.parse(this.b64_to_utf8(protContent))
     }
 
-    const uid = this.jwt.decodeToken(this.jwt.tokenGetter()).user_id
     switch (protName.toUpperCase()) {
       case "VLESS":
         this.toaster.pop("error", "导入失败", "不支持该格式")
@@ -68,7 +65,6 @@ export class UnmarshalComponent implements OnInit {
       case "VMESS":
         this.protocol = {
           Protocol: protName,
-          UID: uid,
           Name: data.ps,
           Address: data.add,
           AlertID: +data.aid,
@@ -86,7 +82,6 @@ export class UnmarshalComponent implements OnInit {
       case "SOCKS":
         this.protocol = {
           Protocol: protName,
-          UID: uid,
           Direct: false,
           Name: ps,
           Address: serverCnf[0],
@@ -98,7 +93,6 @@ export class UnmarshalComponent implements OnInit {
       case "SS":
         this.protocol = {
           Protocol: "shadowsocks",
-          UID: uid,
           Direct: false,
           Name: ps,
           Address: serverCnf[0],

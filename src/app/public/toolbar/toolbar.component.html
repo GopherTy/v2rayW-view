@@ -10,46 +10,9 @@
     <span class="fill-remaining-space"></span>
 
     <!-- foot -->
-    <span [hidden]="hiddenIcon">
-        <a mat-button href="https://www.youtube.com" target="_blank" matTooltip="Youtube">
-            <mat-icon class="icon" fontSet="fontawesome-fab" fontIcon="fa-youtube"></mat-icon>
-        </a>
-    </span>
-
-    <span [hidden]="hiddenIcon">
-        <a mat-button routerLink='/v2ray' mat-button matTooltip="v2ray">
-            <mat-icon class="v2ray" fontSet="fontawesome-fa" fontIcon="fa-paper-plane"></mat-icon>
-        </a>
-    </span>
-
-
-    <span [hidden]="hiddenIcon">
-        <button mat-button [matMenuTriggerFor]="menu" matTooltip="菜单">
+    <span >
+        <button mat-button  matTooltip="菜单">
             <mat-icon>view_list</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openPasswd()">
-                <mat-icon>https</mat-icon>
-                修改密码
-            </button>
-            <button mat-menu-item (click)="loggout()">
-                <mat-icon>directions_run</mat-icon>
-                登出
-            </button>
-        </mat-menu>
-    </span>
-
-    <span [hidden]="!hiddenIcon">
-        <button mat-button (click)="openJoin()">
-            <mat-icon>person_add</mat-icon>
-            注册
-        </button>
-    </span>
-
-    <span [hidden]="!hiddenIcon">
-        <button mat-button (click)="openLogin()">
-            <mat-icon>exit_to_app</mat-icon>
-            登录
         </button>
     </span>
 </mat-toolbar>

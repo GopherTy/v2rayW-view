@@ -14,21 +14,15 @@ import { MatMenuModule } from '@angular/material/menu';
 
 
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { LoginComponent } from './login/login.component';
-import { JoinComponent } from './join/join.component';
 import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { PasswdComponent } from './passwd/passwd.component';
 
 
 
 @NgModule({
     declarations: [
         ToolbarComponent,
-        LoginComponent,
-        JoinComponent,
         PageNotFoundComponent,
-        PasswdComponent,
     ],
     imports: [
         FormsModule,
@@ -47,7 +41,6 @@ import { PasswdComponent } from './passwd/passwd.component';
     ],
     exports: [
         ToolbarComponent,
-        LoginComponent,
     ]
 })
 export class PublicModule { }

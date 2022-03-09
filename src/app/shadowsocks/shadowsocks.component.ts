@@ -4,7 +4,6 @@ import { ProtocolService } from '../service/protocol/protocol.service';
 import { ToasterService } from 'angular2-toaster';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MsgService } from '../service/msg/msg.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { Shadowsocks } from '../service/protocol/api';
 
 @Component({
@@ -28,16 +27,12 @@ export class ShadowsocksComponent implements OnInit {
     private toaster: ToasterService,
     private dialogRef: MatDialogRef<ShadowsocksComponent>,
     private msg: MsgService,
-    private jwt: JwtHelperService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    // 获取用户信息
-    const userInfo = this.jwt.decodeToken(this.jwt.tokenGetter())
     this.params = {
       Protocol: Shadowsocks, // shadowsocks 协议
-      UID: userInfo.user_id, // 用户 id
 
       Security: "none" // 默认值
     }

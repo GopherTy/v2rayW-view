@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { isNullOrUndefined } from 'util';
 import { ProtocolService } from '../service/protocol/protocol.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VmessComponent } from '../vmess/vmess.component';
@@ -30,7 +29,7 @@ export class ProtocolComponent implements OnInit {
   data: any // 协议数据内容
   @Input()
   set value(data: any) {
-    if (isNullOrUndefined(data)) {
+    if (data == null || data == undefined) {
       return
     }
     this.data = data
